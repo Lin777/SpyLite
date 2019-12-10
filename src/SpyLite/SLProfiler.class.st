@@ -363,11 +363,13 @@ SLProfiler class >> profile: aBlock forClassNamed: className [
 	[
 		self installOnClass: cls.
 		profiler beforeProfiling.
-		aBlock value.
+		
 		classSpy := profiler spyForClass: cls.
 		packageSpy := self spyClassForPackage new.
 		packageSpy classAt: className put: classSpy.
 		profiler addPackage: packageSpy.
+		classSpy packageSpy: packageSpy.
+		aBlock value.
 		profiler afterProfiling. ]
 	ensure: [ self removeFromClass: cls ].
 	Transcript show: 'ended...'; cr.
@@ -812,10 +814,9 @@ SLProfiler >> classesAndMetaClassesFor: aPackage [
 { #category : #gathering }
 SLProfiler >> fillClassType: classType with: methodDictionary [
 	| compiledMethod methodSpy |
-
 	classType theClass == SLProfiler class
 		ifTrue: [ ^ self ].
-
+	
 	methodDictionary associationsDo: 
 		[:assoc | 
 			compiledMethod := (classType theClass >> assoc key).
