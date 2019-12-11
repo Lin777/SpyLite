@@ -7,6 +7,6 @@ You can load SpyLite into Pharo image executing the following code in the playgr
 ```Smalltalk
 Metacello new
  baseline:'SpyLite';
- repository: 'github://Lin777/SpyLite:master/src';
+ repository: 'github://jpsandoval/SpyLite:master/src';
  load.
  ```
