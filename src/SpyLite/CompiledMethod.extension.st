@@ -7,6 +7,11 @@ CompiledMethod >> hasMethodSpyAsLiteral [
 ]
 
 { #category : #'*SpyLite-testing' }
+CompiledMethod >> isSpy [
+	^ (self objectAt: 2) isSpyMethod
+]
+
+{ #category : #'*SpyLite-testing' }
 CompiledMethod >> isTemplateMethod [
 	^ SLProfiler templateMethods anySatisfy: [ :cm | (self size = cm size) 
 													and: [ (self initialPC to: self endPC) allSatisfy: [ :i | 
