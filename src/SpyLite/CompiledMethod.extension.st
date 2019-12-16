@@ -7,21 +7,8 @@ CompiledMethod >> hasMethodSpyAsLiteral [
 ]
 
 { #category : #'*SpyLite-testing' }
-CompiledMethod >> isSpy [
-	^ (self objectAt: 2) isSpyMethod
-]
-
-{ #category : #'*SpyLite-testing' }
 CompiledMethod >> isTemplateMethod [
 	^ SLProfiler templateMethods anySatisfy: [ :cm | (self size = cm size) 
 													and: [ (self initialPC to: self endPC) allSatisfy: [ :i | 
 															(self at: i) = (cm at: i) ] ] ]
-]
-
-{ #category : #'*SpyLite' }
-CompiledMethod >> numberOfLinesOfCode [
-	(self propertyValueAt: #numberOfLinesOfCode)
-			ifNil: [ self propertyValueAt: #numberOfLinesOfCode put: self getSource lineCount ].
-
-	^ self propertyValueAt: #numberOfLinesOfCode 
 ]

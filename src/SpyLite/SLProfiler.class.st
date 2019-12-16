@@ -426,7 +426,6 @@ SLProfiler class >> profile: aBlock inPackagesMatching: regexp [
 		profiler := self gatherForPackagesMatching: regexp.
 		profiler beforeProfiling.
 		aBlock value.
-		
 		profiler afterProfiling  ]
 	ensure: [ self removeFromPackagesMatching: regexp ].
 	Transcript show: 'ended...'; cr.
@@ -906,6 +905,12 @@ SLProfiler >> gatherForSeveralPackagesMatching: collectionOfRegExp [
 	^ self
 ]
 
+{ #category : #contract }
+SLProfiler >> getSpyClass: class [
+
+	^ self classAt: class name ifNone: [ nil ]
+]
+
 { #category : #testing }
 SLProfiler >> hasUnitTestResult [
 	^ unitTestResult notNil
@@ -973,6 +978,11 @@ SLProfiler >> packages [
 { #category : #accessing }
 SLProfiler >> packagesToTest: aCollectionOfStrings [
 	packagesToTest := aCollectionOfStrings
+]
+
+{ #category : #contract }
+SLProfiler >> profiler [ 
+	^ self
 ]
 
 { #category : #actions }
