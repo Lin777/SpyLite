@@ -10,5 +10,6 @@ BaselineOfSpyLite >> baseline: spec [
 	spec
 		for: #common
 		do: [ spec
-				package: 'SpyLite' ]
+				package: 'SpyLite';
+				package: 'SpyLite-Scenario' ]
 ]

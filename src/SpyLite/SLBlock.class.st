@@ -1,5 +1,5 @@
 Class {
-	#name : #SBBlock,
+	#name : #SLBlock,
 	#superclass : #Object,
 	#instVars : [
 		'id',
@@ -10,49 +10,49 @@ Class {
 }
 
 { #category : #'instance creation' }
-SBBlock class >> new [ 	
+SLBlock class >> new [ 	
 	^ super new initialize
 ]
 
 { #category : #accessing }
-SBBlock >> executed [
+SLBlock >> executed [
 	executed := true.
 ]
 
 { #category : #accessing }
-SBBlock >> id [
+SLBlock >> id [
 	^ id
 ]
 
 { #category : #accessing }
-SBBlock >> id: anObject [
+SLBlock >> id: anObject [
 	id := anObject
 ]
 
 { #category : #initialization }
-SBBlock >> initialize [
+SLBlock >> initialize [
 	super initialize.
 	executed := false.
 	numberOfStatements := 0
 ]
 
 { #category : #'as yet unclassified' }
-SBBlock >> noExecuted [
+SLBlock >> noExecuted [
 	executed := false.
 	
 ]
 
 { #category : #accessing }
-SBBlock >> numberOfStatements [
+SLBlock >> numberOfStatements [
 	^ numberOfStatements
 ]
 
 { #category : #accessing }
-SBBlock >> numberOfStatements: anObject [
+SLBlock >> numberOfStatements: anObject [
 	numberOfStatements := anObject
 ]
 
 { #category : #accessing }
-SBBlock >> wasExecuted [
+SLBlock >> wasExecuted [
 	^ executed.
 ]

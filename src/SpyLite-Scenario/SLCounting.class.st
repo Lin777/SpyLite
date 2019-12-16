@@ -1,23 +1,23 @@
 Class {
-	#name : #SBCounting,
+	#name : #SLCounting,
 	#superclass : #Object,
-	#category : #SBTCExamples
+	#category : #'SpyLite-Scenario'
 }
 
 { #category : #'as yet unclassified' }
-SBCounting >> anAssignment [
+SLCounting >> anAssignment [
 	| a |
 	a := 3.
 	^ a
 ]
 
 { #category : #accessing }
-SBCounting >> main [
+SLCounting >> main [
 	^ self one
 ]
 
 { #category : #'as yet unclassified' }
-SBCounting >> methMix [
+SLCounting >> methMix [
 	| aBoolean number |
 	aBoolean := 2 == 3.
 	aBoolean
@@ -28,7 +28,7 @@ SBCounting >> methMix [
 ]
 
 { #category : #'as yet unclassified' }
-SBCounting >> methWithArguments: aList [
+SLCounting >> methWithArguments: aList [
 	| selectedNumbers |
 	selectedNumbers := OrderedCollection new.
 	aList detect: [ :aNum | aNum odd ]
@@ -43,7 +43,7 @@ SBCounting >> methWithArguments: aList [
 ]
 
 { #category : #'as yet unclassified' }
-SBCounting >> methWithComposeBlocks [
+SLCounting >> methWithComposeBlocks [
 	| list selectedNumbers |
 	selectedNumbers := OrderedCollection new.
 	list := { 1. 4. 6. 7. 8. 15. 17. 16 }.
@@ -56,13 +56,13 @@ SBCounting >> methWithComposeBlocks [
 ]
 
 { #category : #'as yet unclassified' }
-SBCounting >> methWithCondition [
+SLCounting >> methWithCondition [
 	^ 2 = 1
 		ifTrue: [ 3 ]
 		ifFalse: [ 4 ]
 ]
 
 { #category : #'accessing structure variables' }
-SBCounting >> one [
+SLCounting >> one [
 	^ 1.
 ]

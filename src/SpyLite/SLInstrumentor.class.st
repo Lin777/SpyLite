@@ -1,5 +1,5 @@
 Class {
-	#name : #SBInstrumentor,
+	#name : #SLInstrumentor,
 	#superclass : #RBProgramNodeVisitor,
 	#instVars : [
 		'blocks',
@@ -9,54 +9,54 @@ Class {
 }
 
 { #category : #visiting }
-SBInstrumentor >> addBlock: aBlockNode [
+SLInstrumentor >> addBlock: aBlockNode [
 	blocks add: (self buildSBBlock: aBlockNode)
 ]
 
 { #category : #accessing }
-SBInstrumentor >> blocks [ 	
+SLInstrumentor >> blocks [ 	
 	^ blocks
 ]
 
 { #category : #visiting }
-SBInstrumentor >> buildGhostNode: anInteger [
+SLInstrumentor >> buildGhostNode: anInteger [
 	^ RBParser parseExpression: '#metaObject count: ' , anInteger asString , '.nil.'.
 ]
 
 { #category : #visiting }
-SBInstrumentor >> buildSBBlock: aBlockNode [
-	^ SBBlock new
+SLInstrumentor >> buildSBBlock: aBlockNode [
+	^ SLBlock new
 		id: (self nextId);
 		numberOfStatements: aBlockNode body statements size;
 		yourself
 ]
 
 { #category : #initialization }
-SBInstrumentor >> initialize [
+SLInstrumentor >> initialize [
 	super initialize.
 	blocks := OrderedCollection new.
 ]
 
 { #category : #visiting }
-SBInstrumentor >> instrumentBlock: aBlockNode [
+SLInstrumentor >> instrumentBlock: aBlockNode [
 	self addBlock: aBlockNode.
 	aBlockNode body addNodeFirst: (self buildGhostNode: currentId)
 ]
 
 { #category : #visiting }
-SBInstrumentor >> nextId [
+SLInstrumentor >> nextId [
 	currentId := blocks size + 1.
 	^ currentId.
 ]
 
 { #category : #visiting }
-SBInstrumentor >> visitBlockNode: aBlockNode [
+SLInstrumentor >> visitBlockNode: aBlockNode [
 	self instrumentBlock: aBlockNode.
 	super visitBlockNode: aBlockNode
 ]
 
 { #category : #visiting }
-SBInstrumentor >> visitMethodNode: aMethodNode [
+SLInstrumentor >> visitMethodNode: aMethodNode [
 	self instrumentBlock: aMethodNode.
 	super visitMethodNode: aMethodNode
 ]

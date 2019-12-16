@@ -34,7 +34,7 @@ SLMethodCoverage >> installGhosts [
 	ifFalse: [[ 
 	rbMethodNode := RBParser
 		parseMethod: self originalMethod sourceCode.
-	blocks := SBInstrumentor new
+	blocks := SLInstrumentor new
 		visitNode: rbMethodNode;
 		blocks.
 	aClass := self originalMethod methodClass.

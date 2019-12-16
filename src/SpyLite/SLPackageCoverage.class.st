@@ -3,3 +3,8 @@ Class {
 	#superclass : #SLPackage,
 	#category : #'SpyLite-MetaModel'
 }
+
+{ #category : #hooks }
+SLPackageCoverage class >> spyClassForClass [
+	^ SLClassCoverage
+]
