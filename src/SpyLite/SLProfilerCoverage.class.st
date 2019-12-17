@@ -49,6 +49,13 @@ SLProfilerCoverage >> calculateExecutedStatementsOf: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SLProfilerCoverage >> cleanBlocksOfMethods [
+	self allMethods do: [ :aMethod | 
+		aMethod blocks do: [ :aBlock | aBlock noExecuted ]	
+	]
+]
+
+{ #category : #'as yet unclassified' }
 SLProfilerCoverage >> methodCoverage [
 	| methods |
 	methods := self allMethods.
