@@ -422,8 +422,7 @@ SLProfiler class >> profile: aBlock inPackagesMatching: regexp [
 	
 	Transcript show: 'profiling...'; cr.
 	[
-		self installOnPackagesMatching: regexp.
-		profiler := self gatherForPackagesMatching: regexp.
+		profiler := self profilerForPackagesMatching: regexp.
 		profiler beforeProfiling.
 		aBlock value.
 		profiler afterProfiling  ]
@@ -454,6 +453,12 @@ SLProfiler class >> profile: aBlock inSeveralPackagesMatching: collectionOfRegEx
 	profiler setIfNecessaryTimeAndCallGraphFrom: aBlock.
 	profiler checkInvariant.
 	^ profiler
+]
+
+{ #category : #'public - profiling' }
+SLProfiler class >> profilerForPackagesMatching: regexp [
+	self installOnPackagesMatching: regexp.
+	^ self gatherForPackagesMatching: regexp
 ]
 
 { #category : #'private - installing' }
