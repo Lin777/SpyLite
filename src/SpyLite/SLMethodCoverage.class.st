@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'blocks'
 	],
-	#category : #'SpyLite-MetaModel'
+	#category : #'SpyLite-Coverage'
 }
 
 { #category : #accessing }

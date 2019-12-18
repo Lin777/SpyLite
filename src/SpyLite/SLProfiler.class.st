@@ -188,7 +188,6 @@ SLProfiler class >> installOnBehavior: aBehavior [
 	
 	"We do nothing for traits"
 	aBehavior isTrait ifTrue: [ ^ self ].
-
 	dict := aBehavior methodDict.
 	dict keys do:
 		[:k|

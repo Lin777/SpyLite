@@ -1,7 +1,7 @@
 Class {
 	#name : #SLPackageCoverage,
 	#superclass : #SLPackage,
-	#category : #'SpyLite-MetaModel'
+	#category : #'SpyLite-Coverage'
 }
 
 { #category : #hooks }
