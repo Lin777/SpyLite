@@ -255,7 +255,9 @@ SLProfiler class >> installOnPackagesMatching: regexpAsString [
 
 	| classes |
 	classes := self classesForPackagesMatching: regexpAsString.
-	classes do: [:cls | self installOnClass: cls ]
+	classes do: [:cls | 
+		(regexpAsString match: cls category asString) ifTrue: [ self installOnClass: cls ]
+ 	]
 ]
 
 { #category : #util }
