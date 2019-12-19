@@ -67,6 +67,13 @@ SSTypeCollectorMethod >> isValidReturnTypeWithReceiver [
 	^ self receiverType = self returnType
 ]
 
+{ #category : #hooks }
+SSTypeCollectorMethod >> nameOf: anObject [
+	^ (anObject isClass
+				ifTrue: [ anObject name ]
+				ifFalse: [ anObject class name ])
+]
+
 { #category : #accessing }
 SSTypeCollectorMethod >> receiverType [
 	
@@ -88,23 +95,17 @@ SSTypeCollectorMethod >> returnValue: value [
 SSTypeCollectorMethod >> saveArguments: args [
 	args
 		doWithIndex: [ :anObject :index | 
-			[ argTypes  at: index ]
+			[ argTypes at: index ]
 				on: SubscriptOutOfBounds
-				do: [ argTypes  add: Set new ].
-			(argTypes at: index)
-				add:
-					(anObject isClass
-						ifTrue: [ anObject name ]
-						ifFalse: [ anObject class name ]) ]
+				do: [ argTypes add: Set new ].
+			(argTypes at: index) add: anObject class name ]
 ]
 
 { #category : #hooks }
 SSTypeCollectorMethod >> saveReceiver: anObject [
 	receiverType
 		add:
-			(anObject isClass
-				ifTrue: [ anObject name ]
-				ifFalse: [ anObject class name ])
+			(self nameOf: anObject )
 ]
 
 { #category : #hooks }
