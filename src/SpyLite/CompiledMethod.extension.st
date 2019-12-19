@@ -38,7 +38,7 @@ CompiledMethod >> methodSpy [
 { #category : #'*SpyLite-testing' }
 CompiledMethod >> numberOfLinesOfCode [
 	(self propertyValueAt: #numberOfLinesOfCode)
-			ifNil: [ self propertyValueAt: #numberOfLinesOfCode put: self source lineCount ].
+			ifNil: [ self propertyValueAt: #numberOfLinesOfCode put: self sourceCode lineCount ].
 
 	^ self propertyValueAt: #numberOfLinesOfCode 
 ]
