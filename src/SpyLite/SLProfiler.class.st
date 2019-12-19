@@ -188,7 +188,6 @@ SLProfiler class >> installOnBehavior: aBehavior [
 	
 	"We do nothing for traits"
 	aBehavior isTrait ifTrue: [ ^ self ].
-
 	dict := aBehavior methodDict.
 	dict keys do:
 		[:k|
@@ -255,7 +254,9 @@ SLProfiler class >> installOnPackagesMatching: regexpAsString [
 
 	| classes |
 	classes := self classesForPackagesMatching: regexpAsString.
-	classes do: [:cls | self installOnClass: cls ]
+	classes do: [:cls | 
+		(regexpAsString match: cls category asString) ifTrue: [ self installOnClass: cls ]
+ 	]
 ]
 
 { #category : #util }
@@ -422,11 +423,9 @@ SLProfiler class >> profile: aBlock inPackagesMatching: regexp [
 	
 	Transcript show: 'profiling...'; cr.
 	[
-		self installOnPackagesMatching: regexp.
-		profiler := self gatherForPackagesMatching: regexp.
+		profiler := self profilerForPackagesMatching: regexp.
 		profiler beforeProfiling.
 		aBlock value.
-		
 		profiler afterProfiling  ]
 	ensure: [ self removeFromPackagesMatching: regexp ].
 	Transcript show: 'ended...'; cr.
@@ -455,6 +454,12 @@ SLProfiler class >> profile: aBlock inSeveralPackagesMatching: collectionOfRegEx
 	profiler setIfNecessaryTimeAndCallGraphFrom: aBlock.
 	profiler checkInvariant.
 	^ profiler
+]
+
+{ #category : #'public - profiling' }
+SLProfiler class >> profilerForPackagesMatching: regexp [
+	self installOnPackagesMatching: regexp.
+	^ self gatherForPackagesMatching: regexp
 ]
 
 { #category : #'private - installing' }
@@ -906,6 +911,12 @@ SLProfiler >> gatherForSeveralPackagesMatching: collectionOfRegExp [
 	^ self
 ]
 
+{ #category : #contract }
+SLProfiler >> getSpyClass: class [
+
+	^ self classAt: class name ifNone: [ nil ]
+]
+
 { #category : #testing }
 SLProfiler >> hasUnitTestResult [
 	^ unitTestResult notNil
@@ -973,6 +984,11 @@ SLProfiler >> packages [
 { #category : #accessing }
 SLProfiler >> packagesToTest: aCollectionOfStrings [
 	packagesToTest := aCollectionOfStrings
+]
+
+{ #category : #contract }
+SLProfiler >> profiler [ 
+	^ self
 ]
 
 { #category : #actions }
