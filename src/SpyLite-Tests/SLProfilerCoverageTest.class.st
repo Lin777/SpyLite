@@ -69,52 +69,52 @@ SLProfilerCoverageTest >> tearDown [
 SLProfilerCoverageTest >> testMethodCoverage [
 	| profiler |
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new ]
+		profile: [ SLCounter new ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 0.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: 0.
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 0.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: 0.
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new one ]
+		profile: [ SLCounter new one ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((1/7) asFloat  * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 1.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((1/7) asFloat  * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new anAssignment ]
+		profile: [ SLCounter new anAssignment ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((1/7) asFloat * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 1.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new main ]
+		profile: [ SLCounter new main ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 2.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((2/7) asFloat * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 2.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((2/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithCondition ]
+		profile: [ SLCounter new methWithCondition ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((1/7) asFloat * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 1.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methMix ]
+		profile: [ SLCounter new methMix ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((1/7) asFloat * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 1.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithComposeBlocks ]
+		profile: [ SLCounter new methWithComposeBlocks ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((1/7) asFloat * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 1.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithArguments: #(2 6 8 13 5 9 11 13) ]
+		profile: [ SLCounter new methWithArguments: #(2 6 8 13 5 9 11 13) ]
 		inPackagesMatching: 'SpyLite-Scen*'.
-	self assertNumExecutedMethodsOf: profiler on: #SLCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: ((1/7) asFloat * 100 round: 3).
+	self assertNumExecutedMethodsOf: profiler on: #SLCounter equals: 1.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler
 ]
 
@@ -122,10 +122,10 @@ SLProfilerCoverageTest >> testMethodCoverage [
 SLProfilerCoverageTest >> testProfileOnPackagesMatching [
 	| profiler |
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new ]
+		profile: [ SLCounter new ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self assert: profiler class: SLProfilerCoverage.
-	self assertMethodCoverageOf: profiler on: #SLCounting equals: 0.
+	self assertMethodCoverageOf: profiler on: #SLCounter equals: 0.
 	self assert: profiler statementCoverage1 isEmpty.
 	self clean: profiler
 ]
@@ -134,87 +134,87 @@ SLProfilerCoverageTest >> testProfileOnPackagesMatching [
 SLProfilerCoverageTest >> testStatementCoverage [
 	| profiler |
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new ]
+		profile: [ SLCounter new ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self assert: profiler numberOfAllStatements equals: 27.
 	self assert: profiler statementCoverage1 isEmpty.
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new one ]
+		profile: [ SLCounter new one ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 1.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((1 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((1 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new anAssignment ]
+		profile: [ SLCounter new anAssignment ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 2.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((2 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((2 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new main ]
+		profile: [ SLCounter new main ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 2.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((2 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((2 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithCondition ]
+		profile: [ SLCounter new methWithCondition ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 2.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((2 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((2 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methMix ]
+		profile: [ SLCounter new methMix ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 5.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((5 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((5 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithComposeBlocks ]
+		profile: [ SLCounter new methWithComposeBlocks ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self assert: profiler numberOfExecutedStatements equals: 7.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((7 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((7 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithArguments: #(2 6 8 13 5 9 11 13) ]
+		profile: [ SLCounter new methWithArguments: #(2 6 8 13 5 9 11 13) ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 6.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((6 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((6 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithArguments: #(1 4 6 7) ]
+		profile: [ SLCounter new methWithArguments: #(1 4 6 7) ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 6.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((6 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((6 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SLProfilerCoverage
-		profile: [ SLCounting new methWithArguments: #(4 6 12) ]
+		profile: [ SLCounter new methWithArguments: #(4 6 12) ]
 		inPackagesMatching: 'SpyLite-Scen*'.
 	self
 		assertNumExecutedStatementsOf: profiler
-		on: #SLCounting
+		on: #SLCounter
 		equals: 4.
-	self assertStatementCoverageOf: profiler on: #SLCounting equals: ((4 / 27) asFloat * 100 round: 3).
+	self assertStatementCoverageOf: profiler on: #SLCounter equals: ((4 / 27) asFloat * 100 round: 3).
 	self clean: profiler
 ]

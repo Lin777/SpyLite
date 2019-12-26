@@ -5,7 +5,7 @@ Visit any RBProgramNode in the sintax tree and evaluate literal values
 	literals:		<Dictionary>
 "
 Class {
-	#name : #SLVisitorNode,
+	#name : #SLCollectLiteral,
 	#superclass : #RBProgramNodeVisitor,
 	#instVars : [
 		'literals'
@@ -14,17 +14,17 @@ Class {
 }
 
 { #category : #initialization }
-SLVisitorNode >> initialize [ 
+SLCollectLiteral >> initialize [ 
 	literals := Dictionary new
 ]
 
 { #category : #accessing }
-SLVisitorNode >> literals [
+SLCollectLiteral >> literals [
 	^ literals
 ]
 
 { #category : #visiting }
-SLVisitorNode >> visitLiteralNode: aLiteralNode [
+SLCollectLiteral >> visitLiteralNode: aLiteralNode [
 	| literalValue aValue |
 	literalValue := aLiteralNode value.
 	aValue := literals at: literalValue class name ifAbsentPut: [ Set new ].

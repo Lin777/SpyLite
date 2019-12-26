@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'id',
 		'executed',
-		'numberOfStatements'
+		'numberOfStatements',
+		'start',
+		'stop'
 	],
 	#category : #'SpyLite-Utility'
 }
@@ -50,6 +52,26 @@ SLBlock >> numberOfStatements [
 { #category : #accessing }
 SLBlock >> numberOfStatements: anObject [
 	numberOfStatements := anObject
+]
+
+{ #category : #accessing }
+SLBlock >> start [
+	^ start
+]
+
+{ #category : #accessing }
+SLBlock >> start: anObject [
+	start := anObject
+]
+
+{ #category : #accessing }
+SLBlock >> stop [
+	^ stop
+]
+
+{ #category : #accessing }
+SLBlock >> stop: anObject [
+	stop := anObject
 ]
 
 { #category : #accessing }
