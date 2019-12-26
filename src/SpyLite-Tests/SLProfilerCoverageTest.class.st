@@ -11,7 +11,7 @@ SLProfilerCoverageTest >> asserMethodCoverage: profiler toNoExecutedMethods: aNu
 
 { #category : #asserting }
 SLProfilerCoverageTest >> assert: aObject class: aClass [
-	self assert: aObject className equals: aClass name asString
+	self assert: aObject class name equals: aClass name 
 ]
 
 { #category : #'as yet unclassified' }
