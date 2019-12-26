@@ -2,7 +2,8 @@ Class {
 	#name : #SLMethodCoverage,
 	#superclass : #SLMethod,
 	#instVars : [
-		'blocks'
+		'blocks',
+		'probedMethod'
 	],
 	#category : #'SpyLite-Coverage'
 }
