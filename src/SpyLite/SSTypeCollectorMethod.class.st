@@ -112,7 +112,7 @@ SSTypeCollectorMethod >> saveReceiver: anObject [
 SSTypeCollectorMethod >> selectLiteralsOf: string [
 	| node visitor |
 	node := RBParser parseMethod: string.
-	visitor := SLCollectLiteral new.
+	visitor := SLCollectorLiteral new.
 	node acceptVisitor: visitor.
 	literals := visitor literals
 ]
