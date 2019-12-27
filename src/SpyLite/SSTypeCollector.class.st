@@ -31,11 +31,9 @@ SSTypeCollector class >> typeNameOf: anObject [
 
 { #category : #initialization }
 SSTypeCollector >> addScalar: anObject [
-	| value |
-	value := scalars
-		at: anObject class name
-		ifAbsentPut: [ Set new ].
-	value add: anObject
+  | value |
+  value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ Set new ].
+  value add: anObject
 ]
 
 { #category : #initialization }
@@ -46,12 +44,9 @@ SSTypeCollector >> initialize [
 
 { #category : #initialization }
 SSTypeCollector >> isScalar: anObject [
-	(anObject class name includesAll: 'BlockClosure')
-		ifTrue: [ ^ true ].
-	self allClassesAsDictionary
-		at: (anObject class name)
-		ifAbsent: [ ^ true ].
-	^ false
+  ((self nameOf: anObject class) includesAll: 'BlockClosure') ifTrue: [ ^true ].
+  self allClassesAsDictionary at: (self nameOf: anObject class) ifAbsent: [ ^true ].
+  ^false
 ]
 
 { #category : #initialization }

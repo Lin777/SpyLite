@@ -67,13 +67,6 @@ SSTypeCollectorMethod >> isValidReturnTypeWithReceiver [
 	^ self receiverType = self returnType
 ]
 
-{ #category : #hooks }
-SSTypeCollectorMethod >> nameOf: anObject [
-	^ (anObject isClass
-				ifTrue: [ anObject name ]
-				ifFalse: [ anObject class name ])
-]
-
 { #category : #accessing }
 SSTypeCollectorMethod >> receiverType [
 	
@@ -87,7 +80,7 @@ SSTypeCollectorMethod >> returnType [
 
 { #category : #hooks }
 SSTypeCollectorMethod >> returnValue: value [
-	returnType add: value class name.
+	returnType add: (self nameOf: value class).
 	self checkIfArgIsScalar: value
 ]
 
@@ -98,7 +91,7 @@ SSTypeCollectorMethod >> saveArguments: args [
 			[ argTypes at: index ]
 				on: SubscriptOutOfBounds
 				do: [ argTypes add: Set new ].
-			(argTypes at: index) add: anObject class name ]
+			(argTypes at: index) add: (self nameOf: anObject class) ]
 ]
 
 { #category : #hooks }
