@@ -45,7 +45,7 @@ SSTypeCollector >> initialize [
 { #category : #initialization }
 SSTypeCollector >> isScalar: anObject [
   ((self nameOf: anObject class) includesAll: 'BlockClosure') ifTrue: [ ^true ].
-  self allClassesAsDictionary at: (self nameOf: anObject class) ifAbsent: [ ^true ].
+  self allClassesAsDictionary at: (self nameOf: anObject class) asSymbol ifAbsent: [ ^true ].
   ^false
 ]
 

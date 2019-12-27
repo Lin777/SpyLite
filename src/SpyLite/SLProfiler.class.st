@@ -1003,13 +1003,12 @@ SLProfiler >> removeFromRegistry [
 
 { #category : #gathering }
 SLProfiler >> spyForClass: aClass [
-	| classType |
-	classType := self class spyClassForClass new.
-	classType className: aClass name.
-	self fillClassType: classType with: aClass methodDict.
-	self fillClassType: classType metaclassSpy with: aClass class methodDict.
-	^ classType
-
+  | classType |
+  classType := self class spyClassForClass new.
+  classType className: (self nameOf: aClass).
+  self fillClassType: classType with: aClass methodDict.
+  self fillClassType: classType metaclassSpy with: aClass class methodDict.
+  ^ classType
 ]
 
 { #category : #installing }
