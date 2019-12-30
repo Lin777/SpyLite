@@ -246,6 +246,11 @@ SLMethod >> isNotQuick [
 ]
 
 { #category : #testing }
+SLMethod >> isQuick [
+	^ originalMethod isQuick
+]
+
+{ #category : #testing }
 SLMethod >> isRequired [
 	^ self originalMethod isRequired
 ]
@@ -256,7 +261,7 @@ SLMethod >> isRequired: marker [
 ]
 
 { #category : #testing }
-SLMethod >> isSpy [
+SLMethod >> isSpyMethod [
 	^ true
 ]
 

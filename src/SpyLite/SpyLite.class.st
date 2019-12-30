@@ -12,3 +12,10 @@ Class {
 	],
 	#category : #'SpyLite-MetaModel'
 }
+
+{ #category : #tests }
+SpyLite >> nameOf: anObject [ 
+		^ (anObject isClass
+				ifTrue: [ anObject name ]
+				ifFalse: [ anObject class name ])
+]

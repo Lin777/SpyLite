@@ -188,7 +188,6 @@ SLProfiler class >> installOnBehavior: aBehavior [
 	
 	"We do nothing for traits"
 	aBehavior isTrait ifTrue: [ ^ self ].
-
 	dict := aBehavior methodDict.
 	dict keys do:
 		[:k|
@@ -255,7 +254,9 @@ SLProfiler class >> installOnPackagesMatching: regexpAsString [
 
 	| classes |
 	classes := self classesForPackagesMatching: regexpAsString.
-	classes do: [:cls | self installOnClass: cls ]
+	classes do: [:cls | 
+		(regexpAsString match: cls category asString) ifTrue: [ self installOnClass: cls ]
+ 	]
 ]
 
 { #category : #util }
@@ -363,11 +364,13 @@ SLProfiler class >> profile: aBlock forClassNamed: className [
 	[
 		self installOnClass: cls.
 		profiler beforeProfiling.
-		aBlock value.
+		
 		classSpy := profiler spyForClass: cls.
 		packageSpy := self spyClassForPackage new.
 		packageSpy classAt: className put: classSpy.
 		profiler addPackage: packageSpy.
+		classSpy packageSpy: packageSpy.
+		aBlock value.
 		profiler afterProfiling. ]
 	ensure: [ self removeFromClass: cls ].
 	Transcript show: 'ended...'; cr.
@@ -420,11 +423,9 @@ SLProfiler class >> profile: aBlock inPackagesMatching: regexp [
 	
 	Transcript show: 'profiling...'; cr.
 	[
-		self installOnPackagesMatching: regexp.
-		profiler := self gatherForPackagesMatching: regexp.
+		profiler := self profilerForPackagesMatching: regexp.
 		profiler beforeProfiling.
 		aBlock value.
-		
 		profiler afterProfiling  ]
 	ensure: [ self removeFromPackagesMatching: regexp ].
 	Transcript show: 'ended...'; cr.
@@ -453,6 +454,12 @@ SLProfiler class >> profile: aBlock inSeveralPackagesMatching: collectionOfRegEx
 	profiler setIfNecessaryTimeAndCallGraphFrom: aBlock.
 	profiler checkInvariant.
 	^ profiler
+]
+
+{ #category : #'public - profiling' }
+SLProfiler class >> profilerForPackagesMatching: regexp [
+	self installOnPackagesMatching: regexp.
+	^ self gatherForPackagesMatching: regexp
 ]
 
 { #category : #'private - installing' }
@@ -741,11 +748,11 @@ SLProfiler >> allClasses [
 
 { #category : #'accessing - read only' }
 SLProfiler >> allClassesAsDictionary [
-	| answer |
-	allClassesAsDictionaryCache ifNotNil: [ ^ allClassesAsDictionaryCache ].
-	answer := Dictionary new.
-	self packages do: [:p | p classes do: [:c | answer at: c className put: c]].
-	^ allClassesAsDictionaryCache := answer
+  | answer |
+  allClassesAsDictionaryCache ifNotNil: [ ^allClassesAsDictionaryCache ].
+  answer := Dictionary new.
+  self packages do: [:p |  p classes do: [:c |  answer at: c className put: c ] ].
+  ^allClassesAsDictionaryCache := answer
 ]
 
 { #category : #'accessing - read only' }
@@ -812,10 +819,9 @@ SLProfiler >> classesAndMetaClassesFor: aPackage [
 { #category : #gathering }
 SLProfiler >> fillClassType: classType with: methodDictionary [
 	| compiledMethod methodSpy |
-
 	classType theClass == SLProfiler class
 		ifTrue: [ ^ self ].
-
+	
 	methodDictionary associationsDo: 
 		[:assoc | 
 			compiledMethod := (classType theClass >> assoc key).
@@ -868,14 +874,13 @@ SLProfiler >> gatherForPackagesMatching: regexpAsString [
 	| tpackages |
 
 	tpackages := (RPackageOrganizer default packages select: [:p | regexpAsString match: p name asString ]).
-
 	tpackages do: [ :pak | 
 		| class package |
 		package := self class spyClassForPackage new.
 		package packageName: pak packageName.
 		self addPackage: package.
 
-		((self classesAndMetaClassesFor: pak) reject: #isTrait) do: [:cls|
+		(pak definedClasses reject: #isTrait) do: [:cls|
 			class := self spyForClass: cls.
 			class packageSpy: package.
 			package classAt: cls name asSymbol put: class ] ].
@@ -903,6 +908,12 @@ SLProfiler >> gatherForSeveralPackagesMatching: collectionOfRegExp [
 				package classAt: cls name asSymbol put: class ] ] ].
 
 	^ self
+]
+
+{ #category : #contract }
+SLProfiler >> getSpyClass: class [
+
+	^ self classAt: class name ifNone: [ nil ]
 ]
 
 { #category : #testing }
@@ -974,6 +985,11 @@ SLProfiler >> packagesToTest: aCollectionOfStrings [
 	packagesToTest := aCollectionOfStrings
 ]
 
+{ #category : #contract }
+SLProfiler >> profiler [ 
+	^ self
+]
+
 { #category : #actions }
 SLProfiler >> remove [
 	^ self class remove
@@ -986,13 +1002,12 @@ SLProfiler >> removeFromRegistry [
 
 { #category : #gathering }
 SLProfiler >> spyForClass: aClass [
-	| classType |
-	classType := self class spyClassForClass new.
-	classType className: aClass name.
-	self fillClassType: classType with: aClass methodDict.
-	self fillClassType: classType metaclassSpy with: aClass class methodDict.
-	^ classType
-
+  | classType |
+  classType := self class spyClassForClass new.
+  classType className: (self nameOf: aClass).
+  self fillClassType: classType with: aClass methodDict.
+  self fillClassType: classType metaclassSpy with: aClass class methodDict.
+  ^ classType
 ]
 
 { #category : #installing }
