@@ -23,10 +23,15 @@ SLCollectorLiteral >> literals [
 	^ literals
 ]
 
+{ #category : #tests }
+SLCollectorLiteral >> nameOf: aClass [ 
+	^ aClass name
+]
+
 { #category : #visiting }
 SLCollectorLiteral >> visitLiteralNode: aLiteralNode [
-	| literalValue aValue |
-	literalValue := aLiteralNode value.
-	aValue := literals at: literalValue class name ifAbsentPut: [ Set new ].
-	aValue add: literalValue
+  | literalValue aValue |
+  literalValue := aLiteralNode value.
+  aValue := literals at: (self nameOf: literalValue class) ifAbsentPut: [ Set new ].
+  aValue add: literalValue
 ]

@@ -748,11 +748,11 @@ SLProfiler >> allClasses [
 
 { #category : #'accessing - read only' }
 SLProfiler >> allClassesAsDictionary [
-	| answer |
-	allClassesAsDictionaryCache ifNotNil: [ ^ allClassesAsDictionaryCache ].
-	answer := Dictionary new.
-	self packages do: [:p | p classes do: [:c | answer at: c className put: c]].
-	^ allClassesAsDictionaryCache := answer
+  | answer |
+  allClassesAsDictionaryCache ifNotNil: [ ^allClassesAsDictionaryCache ].
+  answer := Dictionary new.
+  self packages do: [:p |  p classes do: [:c |  answer at: c className put: c ] ].
+  ^allClassesAsDictionaryCache := answer
 ]
 
 { #category : #'accessing - read only' }
@@ -874,14 +874,13 @@ SLProfiler >> gatherForPackagesMatching: regexpAsString [
 	| tpackages |
 
 	tpackages := (RPackageOrganizer default packages select: [:p | regexpAsString match: p name asString ]).
-
 	tpackages do: [ :pak | 
 		| class package |
 		package := self class spyClassForPackage new.
 		package packageName: pak packageName.
 		self addPackage: package.
 
-		((self classesAndMetaClassesFor: pak) reject: #isTrait) do: [:cls|
+		(pak definedClasses reject: #isTrait) do: [:cls|
 			class := self spyForClass: cls.
 			class packageSpy: package.
 			package classAt: cls name asSymbol put: class ] ].

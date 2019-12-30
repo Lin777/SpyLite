@@ -36,10 +36,6 @@ SLClass >> >> aSymbol [
 SLClass >> afterEachExecution: messageName On: aReceiver with: arguments [
 ]
 
-{ #category : #hooks }
-SLClass >> afterEachExecution: messageName on: aReceiver with: arguments [
-]
-
 { #category : #'accessing-computed' }
 SLClass >> allMethods [
 	^ self methods , self metaclassSpy methods
@@ -114,7 +110,7 @@ SLClass >> isClassPresent [
 
 { #category : #testing }
 SLClass >> isMeta [
-	^ self className includes: $ .
+  ^ self className includes: $ 
 ]
 
 { #category : #testing }
@@ -165,7 +161,7 @@ SLClass >> lookupMethodNamed: aSelector [
 { #category : #accessing }
 SLClass >> metaclassSpy [
 	^ metaclassSpy ifNil: 
-		[ metaclassSpy := self class new className: self theClass class name asSymbol ; yourself ]
+		[ metaclassSpy := self class new className: (self nameOf: self theClass class) ; yourself ]
 ]
 
 { #category : #'accessing-computed' }

@@ -7,6 +7,11 @@ Class {
 	#category : #'SpyLite-Tests'
 }
 
+{ #category : #tests }
+SSTypeCollectorMethodTest >> nameOf: aClass [ 
+	^ aClass name
+]
+
 { #category : #running }
 SSTypeCollectorMethodTest >> setUp [ 
 	typeCollectorMethod := SSTypeCollectorMethod new
@@ -14,31 +19,23 @@ SSTypeCollectorMethodTest >> setUp [
 
 { #category : #tests }
 SSTypeCollectorMethodTest >> testSelectLiteralsOf [
-	| source dictLiterals |
-	source := 'test1 
+  | source dictLiterals |
+  source := 'test1 
 	^ 1
 	'.
-	typeCollectorMethod selectLiteralsOf: source.
-	dictLiterals := typeCollectorMethod dictLiterals.
-	self
-		assertCollection: dictLiterals keys
-		hasSameElements: #(#SmallInteger).
-	self
-		assertCollection: (dictLiterals values flatCollect: [ :s | s ])
-		hasSameElements: #(1).
-	source := 'test2
+  typeCollectorMethod selectLiteralsOf: source.
+  dictLiterals := typeCollectorMethod dictLiterals.
+  self assertCollection: dictLiterals keys hasSameElements: (Array with: (self nameOf: SmallInteger)).
+  self assertCollection: (dictLiterals values flatCollect: [:s |  s ]) hasSameElements: #(1).
+  source := 'test2
 		|number string|
 		number := 2.
 		string := ''hello''.
 		number = 5 ifTrue: [string := ''world''].'.
-	typeCollectorMethod selectLiteralsOf: source.
-	dictLiterals := typeCollectorMethod dictLiterals.
-	self
-		assertCollection: dictLiterals keys
-		hasSameElements: #(#SmallInteger #ByteString).
-	self
-		assertCollection: (dictLiterals values flatCollect: [ :val | val ])
-		hasSameElements: #(2 5 'hello' 'world')
+  typeCollectorMethod selectLiteralsOf: source.
+  dictLiterals := typeCollectorMethod dictLiterals.
+  self assertCollection: dictLiterals keys hasSameElements: (Array with: (self nameOf: SmallInteger) with: (self nameOf: ByteString)).
+  self assertCollection: (dictLiterals values flatCollect: [:val |  val ]) hasSameElements: #(2 5 'hello' 'world')
 ]
 
 { #category : #tests }
