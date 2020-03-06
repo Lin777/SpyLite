@@ -28,6 +28,7 @@ SLInstrumentor >> buildSBBlock: aBlockNode [
 	^ SLBlock new
 		id: (self nextId);
 		numberOfStatements: aBlockNode body statements size;
+		code: aBlockNode sourceCode;
 		yourself
 ]
 

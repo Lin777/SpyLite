@@ -25,25 +25,24 @@ SLProfilerCoverage >> calculateExecutedMethodsByClass [
 SLProfilerCoverage >> calculateExecutedMethodsOf: aSymbol [
 	| methods |
 	methods := (self classAt: aSymbol) allMethods.
-	^ ((methods
-		select: [ :aMethod | aMethod blocks isNotEmpty ]
-		thenCollect: [ :aMethod | aMethod blocks first ])
-		select: [ :aBlock | aBlock wasExecuted ]) size
+	^ Array with: methods size with: (self selectExecutedMethods: methods) size
 ]
 
 { #category : #'as yet unclassified' }
 SLProfilerCoverage >> calculateExecutedStatementsByClass [
 	^ (self allClassesAsDictionary keys
 		collect:
-			[ :aClassName | aClassName -> (self calculateExecutedStatementsOf: aClassName) ] thenSelect: [:assoc | assoc value > 0])
+			[ :aClassName | aClassName -> (self calculateExecutedStatementsOf: aClassName) ] thenSelect: [:assoc | assoc value second > 0])
 		asDictionary
 ]
 
 { #category : #'as yet unclassified' }
 SLProfilerCoverage >> calculateExecutedStatementsOf: aSymbol [
-	| methods |
+	| methods numStmts |
 	methods := (self classAt: aSymbol) allMethods.
-	^ (methods
+	numStmts := methods ifEmpty: [ 0 ] ifNotEmpty: [ (methods collect: #numberOfAllStatements ) sum ].
+	^ Array with: numStmts with: 
+	   (methods
 		inject: 0
 		into: [ :sum :method | sum + method numberOfExecutedStatements ])
 ]
@@ -66,15 +65,14 @@ SLProfilerCoverage >> methodCoverage [
 
 { #category : #'as yet unclassified' }
 SLProfilerCoverage >> methodCoverage1 [
-	| numberMethods |
-	numberMethods := self allMethods size.
 	^ (self calculateExecutedMethodsByClass associations
 		collect: [ :assoc | 
-			| aClassName |
+			| aClassName dataExecMethods |
 			aClassName := assoc key.
-			numberMethods > 0 ifTrue: [ 
+			dataExecMethods := assoc value.  "it contains: number of methods, number of executed methods"
+			dataExecMethods first > 0 ifTrue: [ 
 			aClassName
-				-> (((100 * assoc value / numberMethods ) asFloat) round: 3)	"(self classAt: aClassName)" ] ifFalse: [ aClassName -> 0 ]])
+				-> (((100 * dataExecMethods second / dataExecMethods first ) asFloat) round: 3) ] ifFalse: [ aClassName -> 0 ]])
 		asDictionary
 ]
 
@@ -87,11 +85,12 @@ SLProfilerCoverage >> numberOfAllStatements [
 
 { #category : #'as yet unclassified' }
 SLProfilerCoverage >> numberOfExecutedMethods [
-	| methodsWithBlocks |
+	"| methodsWithBlocks |
 	methodsWithBlocks := self allMethods select: [ :aMethod | aMethod blocks isNotEmpty ].
 	^ (methodsWithBlocks 
 		collect: [ :aMethod | aMethod blocks first ]
-		thenSelect: [ :aBlock | aBlock wasExecuted ]) size 
+		thenSelect: [ :aBlock | aBlock wasExecuted ])"
+	^ (self selectExecutedMethods: self allMethods) size 
 ]
 
 { #category : #'as yet unclassified' }
@@ -99,6 +98,12 @@ SLProfilerCoverage >> numberOfExecutedStatements [
 	^ self allMethods
 		inject: 0
 		into: [ :sum :method | sum + method numberOfExecutedStatements ]
+]
+
+{ #category : #'as yet unclassified' }
+SLProfilerCoverage >> selectExecutedMethods: aList [
+	^ (aList select: [ :aMethod | aMethod blocks isNotEmpty ])
+		select: [ :aMethod | aMethod blocks first wasExecuted ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,13 +116,21 @@ SLProfilerCoverage >> statementCoverage [
 
 { #category : #'as yet unclassified' }
 SLProfilerCoverage >> statementCoverage1 [
-	| numb|
-	numb := self numberOfAllStatements.
 	^ (self calculateExecutedStatementsByClass associations
 		collect: [ :assoc | 
-			numb > 0 ifFalse: [ assoc key -> 0 ] ifTrue: [ 
+			| dataExecStmts |
+			dataExecStmts := assoc value. "it contains: number of statements of class methods, number of executed statements"
+			dataExecStmts first > 0 ifFalse: [ assoc key -> 0 ] ifTrue: [ 
 			assoc key
 				->
-					(((100 * assoc value / "(self classAt: assoc key)"self numberOfAllStatements)
+					(((100 * dataExecStmts second / dataExecStmts first)
 						asFloat) round: 3) ]]) asDictionary
+]
+
+{ #category : #'as yet unclassified' }
+SLProfilerCoverage >> summaryExecutedCode [
+	^ ((self selectExecutedMethods: self allMethods) collect: [ :method | 
+		(method classSpy className -> method selector) -> (method blocks collect: [:block | 
+			Array with: block wasExecuted with: block code])
+	]) asDictionary
 ]

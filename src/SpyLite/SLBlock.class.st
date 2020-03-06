@@ -6,7 +6,8 @@ Class {
 		'executed',
 		'numberOfStatements',
 		'start',
-		'stop'
+		'stop',
+		'code'
 	],
 	#category : #'SpyLite-Utility'
 }
@@ -14,6 +15,16 @@ Class {
 { #category : #'instance creation' }
 SLBlock class >> new [ 	
 	^ super new initialize
+]
+
+{ #category : #accessing }
+SLBlock >> code [
+	^ code
+]
+
+{ #category : #accessing }
+SLBlock >> code: anObject [
+	code := anObject
 ]
 
 { #category : #accessing }
@@ -35,7 +46,8 @@ SLBlock >> id: anObject [
 SLBlock >> initialize [
 	super initialize.
 	executed := false.
-	numberOfStatements := 0
+	numberOfStatements := 0.
+	code := ''
 ]
 
 { #category : #'as yet unclassified' }
