@@ -209,6 +209,13 @@ SLClass >> profiler [
 	^ self package profiler
 ]
 
+{ #category : #removing }
+SLClass >> removeMethod: aCompiledMethod [ 
+    (aCompiledMethod methodClass name endsWith: 'class') ifTrue: [ 
+        self metaclassSpy methods removeKey: aCompiledMethod selector ]
+    ifFalse: [ methods removeKey: aCompiledMethod selector ]
+]
+
 { #category : #'accessing-computed' }
 SLClass >> subclasses [
 	^ self profiler allClassesSuchThat: [:cls | cls superclass == self]
