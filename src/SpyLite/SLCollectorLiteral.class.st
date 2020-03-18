@@ -33,5 +33,6 @@ SLCollectorLiteral >> visitLiteralNode: aLiteralNode [
   | literalValue aValue |
   literalValue := aLiteralNode value.
   aValue := literals at: (self nameOf: literalValue class) ifAbsentPut: [ Set new ].
-  aValue add: literalValue
+  aValue add: literalValue.
+	literalValue isCollection ifTrue: [ [ aValue add: literalValue class new ] on: Error do: [  ] ].
 ]

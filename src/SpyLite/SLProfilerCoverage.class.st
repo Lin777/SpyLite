@@ -128,9 +128,7 @@ SLProfilerCoverage >> statementCoverage1 [
 ]
 
 { #category : #'as yet unclassified' }
-SLProfilerCoverage >> summaryExecutedCode [
-	^ ((self selectExecutedMethods: self allMethods) collect: [ :method | 
-		(method classSpy className -> method selector) -> (method blocks collect: [:block | 
-			Array with: block wasExecuted with: block code])
-	]) asDictionary
+SLProfilerCoverage >> summaryExecutionMethods [
+	^ (self selectExecutedMethods: self allMethods) collect: [ :method | 
+		SLSummaryExecutionMethod on: method ]
 ]
