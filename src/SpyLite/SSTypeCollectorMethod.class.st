@@ -15,7 +15,8 @@ Class {
 		'argTypes',
 		'receiverType',
 		'executed',
-		'literals'
+		'literals',
+		'numberOfExecutions'
 	],
 	#category : #'SpyLite-TypeCollector'
 }
@@ -31,7 +32,8 @@ SSTypeCollectorMethod >> beforeRun: methodName with: listOfArguments in: aReceiv
 	self saveReceiver: aReceiver.
 	self selectLiteralsOf: self originalMethod sourceCode.
 	listOfArguments do: [ :arg | self checkIfArgIsScalar: arg ].
-	executed := true
+	executed := true.
+	numberOfExecutions := numberOfExecutions + 1
 ]
 
 { #category : #hooks }
@@ -54,6 +56,7 @@ SSTypeCollectorMethod >> initialize [
 	receiverType := Set new.
 	argTypes := OrderedCollection new.
 	executed := false.
+	numberOfExecutions := 0.
 	literals := Dictionary new
 ]
 
@@ -65,6 +68,11 @@ SSTypeCollectorMethod >> isDeprecated [
 { #category : #testing }
 SSTypeCollectorMethod >> isValidReturnTypeWithReceiver [
 	^ self receiverType = self returnType
+]
+
+{ #category : #hooks }
+SSTypeCollectorMethod >> numberOfExecutions [
+	^ numberOfExecutions
 ]
 
 { #category : #accessing }
