@@ -141,3 +141,14 @@ SLProfilerCoverage >> summaryExecutedCode [
 			Array with: block wasExecuted with: block code])
 	]) asDictionary
 ]
+
+{ #category : #'as yet unclassified' }
+SLProfilerCoverage >> updateClass: aClassCoverage [ 
+	self packages do: [ :pack | 
+		pack classes 
+			at: aClassCoverage className
+			ifPresent: [ :val | val methods: aClassCoverage localMethods.
+				val metaclassSpy methods: aClassCoverage metaclassSpy localMethods.
+				pack classes at: aClassCoverage className put: val ]
+		]
+]
