@@ -833,6 +833,12 @@ SLProfiler >> classesAndMetaClassesFor: aPackage [
 	^ self class classesAndMetaClassesFor: aPackage.
 ]
 
+{ #category : #'accessing - read only' }
+SLProfiler >> deleteCache [
+	allClassesAsDictionaryCache := nil.
+	allMethodsCache := nil.
+]
+
 { #category : #gathering }
 SLProfiler >> fillClassType: classType with: methodDictionary [
 	| compiledMethod methodSpy |
