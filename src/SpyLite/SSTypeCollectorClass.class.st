@@ -9,7 +9,7 @@ Class {
 
 { #category : #hooks }
 SSTypeCollectorClass class >> spyClassForMethod [
-	 ^ SSTypeCollectorMethod
+	 ^ SSTypeCollectorMethod1
 ]
 
 { #category : #defaults }
