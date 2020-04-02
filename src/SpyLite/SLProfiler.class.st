@@ -457,6 +457,23 @@ SLProfiler class >> profile: aBlock inSeveralPackagesMatching: collectionOfRegEx
 ]
 
 { #category : #'public - profiling' }
+SLProfiler class >> profilerForClass: className [
+
+	|profiler packageSpy cls classSpy |
+	cls := Smalltalk at: className.
+	profiler := self new.
+	self installOnClass: cls.
+		
+	classSpy := profiler spyForClass: cls.
+	packageSpy := self spyClassForPackage new.
+	packageSpy classAt: className put: classSpy.
+	profiler addPackage: packageSpy.
+	classSpy packageSpy: packageSpy.
+		
+	^ profiler
+]
+
+{ #category : #'public - profiling' }
 SLProfiler class >> profilerForPackagesMatching: regexp [
 	self installOnPackagesMatching: regexp.
 	^ self gatherForPackagesMatching: regexp
@@ -816,6 +833,12 @@ SLProfiler >> classesAndMetaClassesFor: aPackage [
 	^ self class classesAndMetaClassesFor: aPackage.
 ]
 
+{ #category : #'accessing - read only' }
+SLProfiler >> deleteCache [
+	allClassesAsDictionaryCache := nil.
+	allMethodsCache := nil.
+]
+
 { #category : #gathering }
 SLProfiler >> fillClassType: classType with: methodDictionary [
 	| compiledMethod methodSpy |
@@ -1013,6 +1036,17 @@ SLProfiler >> spyForClass: aClass [
 { #category : #installing }
 SLProfiler >> uninstall [
 	self allMethods do: #uninstall
+]
+
+{ #category : #installing }
+SLProfiler >> uninstallClass: aSymbol [ 
+	| class |
+	class := (self allClassesSuchThat: [ :aClass | aClass className = aSymbol]) first.
+	class ifNotNil: [ 
+		class methods do: #uninstall.
+		class metaclassSpy methods do: #uninstall 
+	].
+	^ class
 ]
 
 { #category : #accessing }

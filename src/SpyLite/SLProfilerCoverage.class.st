@@ -132,3 +132,23 @@ SLProfilerCoverage >> summaryExecutionMethods [
 	^ (self selectExecutedMethods: self allMethods) collect: [ :method | 
 		SLSummaryExecutionMethod on: method ]
 ]
+
+{ #category : #'as yet unclassified' }
+SLProfilerCoverage >> statementCoverageFor: aTargetClass [
+	| executedStatements |
+	executedStatements := self calculateExecutedStatementsOf: aTargetClass.
+	^ ((executedStatements second / executedStatements first) * 100 asFloat) round: 3
+]
+
+{ #category : #'as yet unclassified' }
+SLProfilerCoverage >> updateClass: aClassCoverage [
+	self packages do: [ :pack | 
+		pack classes 
+			at: aClassCoverage className
+			ifPresent: [ :val | aClassCoverage localMethods do: [ :meth | meth classSpy: val ] .
+				aClassCoverage metaclassSpy localMethods do: [ :meth | meth classSpy: val metaclassSpy ] .
+				val methods: aClassCoverage localMethods.
+				val metaclassSpy methods: aClassCoverage metaclassSpy localMethods.
+				pack classes at: aClassCoverage className put: val ]
+		]
+]

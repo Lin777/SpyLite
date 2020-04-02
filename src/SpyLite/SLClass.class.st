@@ -170,6 +170,11 @@ SLClass >> methods [
 ]
 
 { #category : #'accessing-computed' }
+SLClass >> methods: aDictionary [
+	methods := aDictionary 
+]
+
+{ #category : #'accessing-computed' }
 SLClass >> nonMetaClassName [
 	^ (self isMeta
 		ifTrue: [ self className copyFrom: 1 to: ((self className indexOf: $ ) - 1)] 
