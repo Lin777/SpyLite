@@ -75,6 +75,11 @@ SSTypeCollectorMethod >> numberOfExecutions [
 	^ numberOfExecutions
 ]
 
+{ #category : #hooks }
+SSTypeCollectorMethod >> numberOfExecutions: aNumber [
+	numberOfExecutions := aNumber 
+]
+
 { #category : #accessing }
 SSTypeCollectorMethod >> receiverType [
 	
