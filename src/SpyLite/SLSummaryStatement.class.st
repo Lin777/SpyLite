@@ -15,6 +15,12 @@ SLSummaryStatement class >> with: string and: boolean [
 		executed: boolean
 ]
 
+{ #category : #comparing }
+SLSummaryStatement >> = another [ 
+	^ (self class = another class) 
+		and: [ self executed = another executed ]
+]
+
 { #category : #accessing }
 SLSummaryStatement >> code [
 	^ code
@@ -33,6 +39,11 @@ SLSummaryStatement >> executed [
 { #category : #accessing }
 SLSummaryStatement >> executed: anObject [
 	executed := anObject
+]
+
+{ #category : #comparing }
+SLSummaryStatement >> hash [ 
+	^ super hash bitXor: executed hash
 ]
 
 { #category : #initialization }

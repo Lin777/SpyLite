@@ -128,16 +128,16 @@ SLProfilerCoverage >> statementCoverage1 [
 ]
 
 { #category : #'as yet unclassified' }
-SLProfilerCoverage >> summaryExecutionMethods [
-	^ (self selectExecutedMethods: self allMethods) collect: [ :method | 
-		SLSummaryExecutionMethod on: method ]
-]
-
-{ #category : #'as yet unclassified' }
 SLProfilerCoverage >> statementCoverageFor: aTargetClass [
 	| executedStatements |
 	executedStatements := self calculateExecutedStatementsOf: aTargetClass.
 	^ ((executedStatements second / executedStatements first) * 100 asFloat) round: 3
+]
+
+{ #category : #'as yet unclassified' }
+SLProfilerCoverage >> summaryExecutionMethods [
+	^ (self selectExecutedMethods: self allMethods) collect: [ :method | 
+		SLSummaryExecutionMethod on: method ]
 ]
 
 { #category : #'as yet unclassified' }

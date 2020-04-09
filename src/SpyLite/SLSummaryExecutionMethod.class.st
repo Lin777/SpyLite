@@ -23,6 +23,15 @@ SLSummaryExecutionMethod class >> on: slMethod [
 		])
 ]
 
+{ #category : #comparing }
+SLSummaryExecutionMethod >> = another [ 
+	^ (self class = another class) 
+		and: [ (selector = another selector) 
+			and: [ (executed = another executed ) 
+				and: [ (executorClass = another executorClass ) 
+					and: [ (summaryStatements = another summaryStatements) ] ] ] ]
+]
+
 { #category : #accessing }
 SLSummaryExecutionMethod >> code [
 	^ code
@@ -51,6 +60,11 @@ SLSummaryExecutionMethod >> executorClass [
 { #category : #accessing }
 SLSummaryExecutionMethod >> executorClass: anObject [
 	executorClass := anObject
+]
+
+{ #category : #comparing }
+SLSummaryExecutionMethod >> hash [
+	^ super hash bitXor: summaryStatements hash
 ]
 
 { #category : #initialization }
