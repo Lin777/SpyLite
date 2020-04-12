@@ -43,7 +43,7 @@ SLSummaryStatement >> executed: anObject [
 
 { #category : #comparing }
 SLSummaryStatement >> hash [ 
-	^ super hash bitXor: executed hash
+	^ executed hash
 ]
 
 { #category : #initialization }

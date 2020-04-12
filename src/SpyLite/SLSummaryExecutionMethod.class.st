@@ -64,7 +64,7 @@ SLSummaryExecutionMethod >> executorClass: anObject [
 
 { #category : #comparing }
 SLSummaryExecutionMethod >> hash [
-	^ super hash bitXor: summaryStatements hash
+	^ summaryStatements hash
 ]
 
 { #category : #initialization }
