@@ -33,8 +33,8 @@ SSTypeCollector class >> typeNameOf: anObject [
 SSTypeCollector >> addScalar: anObject [
   | value |
   value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ Set new ].
-  "value add: anObject.
-	anObject isCollection ifTrue: [ [ value add: anObject class new ] on: Error do: [  ] ]"
+  value add: anObject.
+	anObject isCollection ifTrue: [ [ value add: anObject class new ] on: Error do: [  ] ]
 ]
 
 { #category : #initialization }
