@@ -26,7 +26,7 @@ SLMethodCoverage >> initialize [
 	blocks := OrderedCollection new.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #installing }
 SLMethodCoverage >> installGhosts [
 	| rbMethodNode newMethod aClass |
 	"self selector = #pic ifTrue: [ self halt ]."
@@ -57,7 +57,7 @@ SLMethodCoverage >> numberOfExecutedStatements [
 		into: [ :sum :block | sum + block numberOfStatements ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #updating }
 SLMethodCoverage >> updateStateFirstBlock [
 	blocks ifNotEmpty: [ blocks first executed ]
 ]

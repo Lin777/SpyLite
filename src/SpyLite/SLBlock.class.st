@@ -50,7 +50,7 @@ SLBlock >> initialize [
 	code := ''
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #updating }
 SLBlock >> noExecuted [
 	executed := false.
 	

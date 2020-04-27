@@ -1,6 +1,9 @@
 Class {
 	#name : #SLProfilerCoverage,
 	#superclass : #SLProfiler,
+	#instVars : [
+		'typeInfo'
+	],
 	#category : #'SpyLite-Coverage'
 }
 
@@ -14,21 +17,21 @@ SLProfilerCoverage >> beforeProfiling [
 	self allMethods select: #isNotMethodExtension thenDo: #installGhosts.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> calculateExecutedMethodsByClass [
 	^ (self allClassesAsDictionary keys
 		collect: [ :aClassName | aClassName -> (self calculateExecutedMethodsOf: aClassName) ])
 		asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> calculateExecutedMethodsOf: aSymbol [
 	| methods |
 	methods := (self classAt: aSymbol) allMethods.
 	^ Array with: methods size with: (self selectExecutedMethods: methods) size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> calculateExecutedStatementsByClass [
 	^ (self allClassesAsDictionary keys
 		collect:
@@ -36,7 +39,7 @@ SLProfilerCoverage >> calculateExecutedStatementsByClass [
 		asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> calculateExecutedStatementsOf: aSymbol [
 	| methods numStmts |
 	methods := (self classAt: aSymbol) allMethods.
@@ -47,14 +50,14 @@ SLProfilerCoverage >> calculateExecutedStatementsOf: aSymbol [
 		into: [ :sum :method | sum + method numberOfExecutedStatements ])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #cleaning }
 SLProfilerCoverage >> cleanBlocksOfMethods [
 	self allMethods do: [ :aMethod | 
 		aMethod blocks do: [ :aBlock | aBlock noExecuted ]	
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> methodCoverage [
 	| methods |
 	methods := self allMethods.
@@ -63,7 +66,7 @@ SLProfilerCoverage >> methodCoverage [
 	^ ((100 * self numberOfExecutedMethods / methods size) asFloat) round: 3
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> methodCoverage1 [
 	^ (self calculateExecutedMethodsByClass associations
 		collect: [ :assoc | 
@@ -76,14 +79,14 @@ SLProfilerCoverage >> methodCoverage1 [
 		asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SLProfilerCoverage >> numberOfAllStatements [
 	^ self allMethods
 		inject: 0
 		into: [ :sum :method | sum + method numberOfAllStatements ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SLProfilerCoverage >> numberOfExecutedMethods [
 	"| methodsWithBlocks |
 	methodsWithBlocks := self allMethods select: [ :aMethod | aMethod blocks isNotEmpty ].
@@ -93,20 +96,20 @@ SLProfilerCoverage >> numberOfExecutedMethods [
 	^ (self selectExecutedMethods: self allMethods) size 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SLProfilerCoverage >> numberOfExecutedStatements [
 	^ self allMethods
 		inject: 0
 		into: [ :sum :method | sum + method numberOfExecutedStatements ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #filtering }
 SLProfilerCoverage >> selectExecutedMethods: aList [
 	^ (aList select: [ :aMethod | aMethod blocks isNotEmpty ])
 		select: [ :aMethod | aMethod blocks first wasExecuted ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> statementCoverage [
 	self numberOfAllStatements == 0
 		ifTrue: [ ^ 0 ].
@@ -114,7 +117,7 @@ SLProfilerCoverage >> statementCoverage [
 		asFloat) round: 3
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> statementCoverage1 [
 	^ (self calculateExecutedStatementsByClass associations
 		collect: [ :assoc | 
@@ -127,20 +130,41 @@ SLProfilerCoverage >> statementCoverage1 [
 						asFloat) round: 3) ]]) asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #calculations }
 SLProfilerCoverage >> statementCoverageFor: aTargetClass [
 	| executedStatements |
 	executedStatements := self calculateExecutedStatementsOf: aTargetClass.
 	^ ((executedStatements second / executedStatements first) * 100 asFloat) round: 3
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #summaries }
 SLProfilerCoverage >> summaryExecutionMethods [
 	^ (self selectExecutedMethods: self allMethods) collect: [ :method | 
 		SLSummaryExecutionMethod on: method ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #summaries }
+SLProfilerCoverage >> summaryMethodsOf: aTargetClass [
+	| aSTypeClassInfo |
+	aSTypeClassInfo := (typeInfo classAt: aTargetClass).
+	^ (self classAt: aTargetClass) allMethods collect: [ :method | | summary methodTypeInfo |
+		summary := SLSummaryExecutionMethod on: method.
+		methodTypeInfo := (method isClassSide ifTrue: [ aSTypeClassInfo classMethodTypes ]
+		ifFalse: [ aSTypeClassInfo methodTypes ]) at: method selector.
+		methodTypeInfo ifNotNil: [ summary updateTypeInfoWith: methodTypeInfo ] ]
+]
+
+{ #category : #accessing }
+SLProfilerCoverage >> typeInfo [
+	^ typeInfo
+]
+
+{ #category : #accessing }
+SLProfilerCoverage >> typeInfo: anObject [
+	typeInfo := anObject
+]
+
+{ #category : #updating }
 SLProfilerCoverage >> updateClass: aClassCoverage [
 	self packages do: [ :pack | 
 		pack classes 

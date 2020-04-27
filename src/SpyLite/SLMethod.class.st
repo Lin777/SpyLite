@@ -211,6 +211,12 @@ SLMethod >> isAbstract [
 	^ self originalMethod isAbstract
 ]
 
+{ #category : #testing }
+SLMethod >> isClassSide [
+	
+	^ (self classSpy className endsWith: 'class')
+]
+
 { #category : #delegation }
 SLMethod >> isConflict [
 	^ originalMethod isConflict
