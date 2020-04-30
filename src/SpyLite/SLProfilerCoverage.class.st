@@ -150,7 +150,7 @@ SLProfilerCoverage >> summaryMethodsOf: aTargetClass [
 	^ (self classAt: aTargetClass) allMethods collect: [ :method | | summary methodTypeInfo |
 		summary := SLSummaryExecutionMethod on: method.
 		methodTypeInfo := (method isClassSide ifTrue: [ aSTypeClassInfo classMethodTypes ]
-		ifFalse: [ aSTypeClassInfo methodTypes ]) at: method selector.
+		ifFalse: [ aSTypeClassInfo methodTypes ]) at: method selector ifAbsent: [nil].
 		methodTypeInfo ifNotNil: [ summary updateTypeInfoWith: methodTypeInfo ] ]
 ]
 
