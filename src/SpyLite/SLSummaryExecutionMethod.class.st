@@ -144,6 +144,25 @@ SLSummaryExecutionMethod >> selector: anObject [
 	selector := anObject
 ]
 
+{ #category : #export }
+SLSummaryExecutionMethod >> summaryAsColl [
+	^ OrderedCollection new 
+			add: executorClass;
+			add: selector;
+			add: isClassSide;
+			add: executed;
+			add: hasProfiler;
+			add: code;
+			add:
+			(argsTypes
+				ifNil: [ #() ]
+				ifNotNil: [ (argsTypes collect: [ :argType | argType types asArray ]) asArray ]);
+			add: returnType types asArray;
+			add: (self executedBlocks collect: #code) asArray;
+			add: (self unexecutedBlocks collect: #code) asArray;
+			yourself 
+]
+
 { #category : #accessing }
 SLSummaryExecutionMethod >> summaryStatements [
 	^ summaryStatements
@@ -174,19 +193,5 @@ SLSummaryExecutionMethod >> updateTypeInfoWith: aMethodTypeInfo [
 { #category : #export }
 SLSummaryExecutionMethod >> writeDataCSV: neoCSVWriter withIndex: anInteger [
 	neoCSVWriter nextPut: (Array with: anInteger 
-		withAll: (OrderedCollection new 
-			add: executorClass;
-			add: selector;
-			add: isClassSide;
-			add: executed;
-			add: hasProfiler;
-			add: code;
-			add:
-			(argsTypes
-				ifNil: [ #() ]
-				ifNotNil: [ (argsTypes collect: [ :argType | argType types asArray ]) asArray ]);
-			add: returnType types asArray;
-			add: (self executedBlocks collect: #code) asArray;
-			add: (self unexecutedBlocks collect: #code) asArray;
-			yourself ))
+		withAll: ( self summaryAsColl ))
 ]
