@@ -218,7 +218,6 @@ SLProfiler class >> installOnBehavior: aBehavior [
 { #category : #'private - installing' }
 SLProfiler class >> installOnClass: aClass [
 	"Transcript show: 'instrumenting ', aClass name printString ;cr."
-
 	(self isDangerous: aClass instanceSide)
 		ifTrue: [ ^ self ].
 	self
@@ -255,7 +254,7 @@ SLProfiler class >> installOnPackagesMatching: regexpAsString [
 	| classes |
 	classes := self classesForPackagesMatching: regexpAsString.
 	classes do: [:cls | 
-		(regexpAsString match: cls category asString) ifTrue: [ self installOnClass: cls ]
+		(regexpAsString, '*' match: cls category asString) ifTrue: [ self installOnClass: cls ]
  	]
 ]
 

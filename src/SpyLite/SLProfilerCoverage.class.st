@@ -132,9 +132,11 @@ SLProfilerCoverage >> statementCoverage1 [
 
 { #category : #calculations }
 SLProfilerCoverage >> statementCoverageFor: aTargetClass [
-	| executedStatements |
+	[| executedStatements |
 	executedStatements := self calculateExecutedStatementsOf: aTargetClass.
-	^ ((executedStatements second / executedStatements first) * 100 asFloat) round: 3
+	^ ((executedStatements second / executedStatements first) * 100 asFloat) round: 3]
+ on: Error
+do: [ ^ 0 ]
 ]
 
 { #category : #summaries }
