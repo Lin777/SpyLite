@@ -20,8 +20,8 @@ SLSummaryExecutionMethod class >> on: slMethod [
 	^ self new 
 		executorClass: slMethod classSpy className;
 		selector: slMethod selector;
-		code: slMethod blocks first code;
-		executed: slMethod blocks first wasExecuted;
+		code: ([slMethod blocks first code] on: SubscriptOutOfBounds do: ['']);
+		executed: ([slMethod blocks first wasExecuted] on: SubscriptOutOfBounds do: [ false ]);
 		isClassSide: slMethod isClassSide;
 		summaryStatements: (slMethod blocks allButFirst collect: [:block | 
 			SLSummaryStatement with: block code and: block wasExecuted 	
