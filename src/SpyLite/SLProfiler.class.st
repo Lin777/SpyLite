@@ -22,7 +22,8 @@ Class {
 		'counter',
 		'unitTestResult',
 		'packagesToTest',
-		'allNonAbstractMethodsCache'
+		'allNonAbstractMethodsCache',
+		'afterBlock'
 	],
 	#category : #'SpyLite-MetaModel'
 }
@@ -432,6 +433,24 @@ SLProfiler class >> profile: aBlock inPackagesMatching: regexp [
 	^ profiler
 ]
 
+{ #category : #gathering }
+SLProfiler class >> profile: aBlock inPackagesMatching: regexp  withAfterBlockProfiling: afterBlock [ 
+
+	| profiler |
+	
+	Transcript show: 'profiling...'; cr.
+	[
+		profiler := self profilerForPackagesMatching: regexp.
+		profiler afterBlock: afterBlock.
+		profiler beforeProfiling.
+		aBlock value.
+		profiler afterProfiling  ]
+	ensure: [ self removeFromPackagesMatching: regexp ].
+	Transcript show: 'ended...'; cr.
+	profiler checkInvariant.
+	^ profiler
+]
+
 { #category : #'public - profiling' }
 SLProfiler class >> profile: aBlock inSeveralPackagesMatching: collectionOfRegExp [
 
@@ -748,9 +767,14 @@ SLProfiler >> addPackage: aPackageSpy [
 	aPackageSpy profiler: self.
 ]
 
+{ #category : #accessing }
+SLProfiler >> afterBlock: aBlock [
+	afterBlock := aBlock
+]
+
 { #category : #hooks }
 SLProfiler >> afterProfiling [ 
-
+	afterBlock value
 ]
 
 { #category : #'accessing - read only' }
@@ -947,6 +971,7 @@ SLProfiler >> hasUnitTestResult [
 SLProfiler >> initialize [ 
 	super initialize.
 	packages := nil.
+	afterBlock := [  ]
 	
 ]
 
