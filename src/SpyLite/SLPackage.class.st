@@ -97,7 +97,7 @@ SLPackage >> hasClassNamed: className [
 { #category : #'initialize-release' }
 SLPackage >> initialize [ 
 	super initialize.
-	classes := Dictionary new 
+	classes := OrderedDictionary new 
 ]
 
 { #category : #accessing }

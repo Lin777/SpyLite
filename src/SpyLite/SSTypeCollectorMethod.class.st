@@ -52,12 +52,12 @@ SSTypeCollectorMethod >> dictLiterals [
 { #category : #hooks }
 SSTypeCollectorMethod >> initialize [
 	super initialize.
-	returnType := Set new.
-	receiverType := Set new.
+	returnType := OrderedSet new.
+	receiverType := OrderedSet new.
 	argTypes := OrderedCollection new.
 	executed := false.
 	numberOfExecutions := 0.
-	literals := Dictionary new
+	literals := OrderedDictionary new
 ]
 
 { #category : #testing }
@@ -103,7 +103,7 @@ SSTypeCollectorMethod >> saveArguments: args [
 		doWithIndex: [ :anObject :index | 
 			[ argTypes at: index ]
 				on: SubscriptOutOfBounds
-				do: [ argTypes add: Set new ].
+				do: [ argTypes add: OrderedSet new ].
 			(argTypes at: index) add: (self nameOf: anObject class) ]
 ]
 

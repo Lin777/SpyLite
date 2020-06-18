@@ -15,7 +15,7 @@ Class {
 
 { #category : #initialization }
 SLCollectorLiteral >> initialize [ 
-	literals := Dictionary new
+	literals := OrderedDictionary new
 ]
 
 { #category : #accessing }
@@ -32,7 +32,7 @@ SLCollectorLiteral >> nameOf: aClass [
 SLCollectorLiteral >> visitLiteralNode: aLiteralNode [
   | literalValue aValue |
   literalValue := aLiteralNode value.
-  aValue := literals at: (self nameOf: literalValue class) ifAbsentPut: [ Set new ].
+  aValue := literals at: (self nameOf: literalValue class) ifAbsentPut: [ OrderedSet new ].
   aValue add: literalValue.
 	literalValue isCollection ifTrue: [ [ aValue add: literalValue class new ] on: Error do: [  ] ]
 ]

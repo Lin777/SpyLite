@@ -790,7 +790,7 @@ SLProfiler >> allClasses [
 SLProfiler >> allClassesAsDictionary [
   | answer |
   allClassesAsDictionaryCache ifNotNil: [ ^allClassesAsDictionaryCache ].
-  answer := Dictionary new.
+  answer := OrderedDictionary new.
   self packages do: [:p |  p classes do: [:c |  answer at: c className put: c ] ].
   ^allClassesAsDictionaryCache := answer
 ]

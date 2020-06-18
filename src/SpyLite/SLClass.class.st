@@ -100,7 +100,7 @@ SLClass >> hasMethodNamed: aSelector [
 { #category : #'initialize-release' }
 SLClass >> initialize [ 
 	super initialize.
-	 methods := Dictionary new 
+	 methods := OrderedDictionary new 
 ]
 
 { #category : #testing }

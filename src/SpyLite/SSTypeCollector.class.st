@@ -32,7 +32,7 @@ SSTypeCollector class >> typeNameOf: anObject [
 { #category : #initialization }
 SSTypeCollector >> addScalar: anObject [
   | value |
-  value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ Set new ].
+  value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ OrderedSet new ].
   value add: anObject.
 	anObject isCollection ifTrue: [ [ value add: anObject class new ] on: Error do: [  ] ]
 ]
@@ -40,7 +40,7 @@ SSTypeCollector >> addScalar: anObject [
 { #category : #initialization }
 SSTypeCollector >> initialize [
 	super initialize.
-	scalars := Dictionary new
+	scalars := OrderedDictionary new
 ]
 
 { #category : #initialization }
