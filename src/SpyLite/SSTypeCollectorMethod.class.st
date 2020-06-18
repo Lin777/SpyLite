@@ -16,7 +16,11 @@ Class {
 		'receiverType',
 		'executed',
 		'literals',
-		'numberOfExecutions'
+		'numberOfExecutions',
+		'orderedLiterals',
+		'orderedArgTypes',
+		'orderedReturnType',
+		'orderedReceiverType'
 	],
 	#category : #'SpyLite-TypeCollector'
 }
@@ -53,11 +57,15 @@ SSTypeCollectorMethod >> dictLiterals [
 SSTypeCollectorMethod >> initialize [
 	super initialize.
 	returnType := Set new.
+	orderedReturnType := OrderedCollection new.
 	receiverType := Set new.
+	orderedReceiverType := OrderedCollection new.
 	argTypes := OrderedCollection new.
+	orderedArgTypes := OrderedCollection new.
 	executed := false.
 	numberOfExecutions := 0.
-	literals := Dictionary new
+	literals := OrderedDictionary new.
+	orderedLiterals := OrderedDictionary new
 ]
 
 { #category : #testing }
@@ -81,6 +89,26 @@ SSTypeCollectorMethod >> numberOfExecutions: aNumber [
 ]
 
 { #category : #accessing }
+SSTypeCollectorMethod >> orderedArgTypes [
+	^ orderedArgTypes 
+]
+
+{ #category : #accessing }
+SSTypeCollectorMethod >> orderedLiterals [
+	^ orderedLiterals
+]
+
+{ #category : #accessing }
+SSTypeCollectorMethod >> orderedReceiverType [
+	^ orderedReceiverType
+]
+
+{ #category : #accessing }
+SSTypeCollectorMethod >> orderedReturnType [
+	^ orderedReturnType 
+]
+
+{ #category : #accessing }
 SSTypeCollectorMethod >> receiverType [
 	
 	^ receiverType
@@ -93,25 +121,35 @@ SSTypeCollectorMethod >> returnType [
 
 { #category : #hooks }
 SSTypeCollectorMethod >> returnValue: value [
-	returnType add: (self nameOf: value class).
+	| nameOfClass |
+	nameOfClass := self nameOf: value class.
+	(returnType includes: nameOfClass) ifFalse: [ orderedReturnType add: nameOfClass ].
+	returnType add: nameOfClass.
 	self checkIfArgIsScalar: value
 ]
 
 { #category : #hooks }
 SSTypeCollectorMethod >> saveArguments: args [
 	args
-		doWithIndex: [ :anObject :index | 
+		doWithIndex: [ :anObject :index | | nameOfClass set coll |
+			nameOfClass := self nameOf: anObject class.
 			[ argTypes at: index ]
 				on: SubscriptOutOfBounds
-				do: [ argTypes add: Set new ].
-			(argTypes at: index) add: (self nameOf: anObject class) ]
+				do: [ argTypes add: Set new.
+					orderedArgTypes add: OrderedCollection new ].
+			set := argTypes at: index.
+			coll := orderedArgTypes at: index.
+			(set includes: nameOfClass) 
+				ifFalse: [ coll add: nameOfClass  ].
+			set add: nameOfClass ]
 ]
 
 { #category : #hooks }
 SSTypeCollectorMethod >> saveReceiver: anObject [
-	receiverType
-		add:
-			(self nameOf: anObject )
+	| nameOfClass |
+	nameOfClass := self nameOf: anObject.
+	(receiverType includes: nameOfClass) ifFalse: [ orderedReceiverType add: nameOfClass ].
+	receiverType add: nameOfClass
 ]
 
 { #category : #hooks }
@@ -120,7 +158,7 @@ SSTypeCollectorMethod >> selectLiteralsOf: string [
 	node := RBParser parseMethod: string.
 	visitor := SLCollectorLiteral new.
 	node acceptVisitor: visitor.
-	literals := visitor literals
+	literals := visitor orderedLiterals
 ]
 
 { #category : #hooks }

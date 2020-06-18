@@ -8,7 +8,8 @@ Class {
 	#name : #SSTypeCollector,
 	#superclass : #SLProfiler,
 	#instVars : [
-		'scalars'
+		'scalars',
+		'orderedScalars'
 	],
 	#category : #'SpyLite-TypeCollector'
 }
@@ -31,16 +32,23 @@ SSTypeCollector class >> typeNameOf: anObject [
 
 { #category : #initialization }
 SSTypeCollector >> addScalar: anObject [
-  | value |
-  value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ Set new ].
-  value add: anObject.
-	anObject isCollection ifTrue: [ [ value add: anObject class new ] on: Error do: [  ] ]
+  | value valueCollection nameOfClass |
+  nameOfClass := self nameOf: anObject class.
+  value := scalars at: nameOfClass ifAbsentPut: [ Set new ].
+  valueCollection := orderedScalars at: nameOfClass ifAbsentPut: [ OrderedCollection new ].
+  (value includes: anObject) ifFalse: [ valueCollection add: anObject ].
+	value add: anObject.
+	anObject isCollection ifTrue: [ [ | val |
+			val := anObject class new.
+			(value includes: val) ifFalse: [ valueCollection add: anObject class new ].
+			value add: val ] on: Error do: [  ] ]
 ]
 
 { #category : #initialization }
 SSTypeCollector >> initialize [
 	super initialize.
-	scalars := Dictionary new
+	scalars := Dictionary new.
+	orderedScalars := Dictionary new
 ]
 
 { #category : #initialization }
@@ -48,6 +56,11 @@ SSTypeCollector >> isScalar: anObject [
   ((self nameOf: anObject class) includesAll: 'BlockClosure') ifTrue: [ ^true ].
   self allClassesAsDictionary at: (self nameOf: anObject class) asSymbol ifAbsent: [ ^true ].
   ^false
+]
+
+{ #category : #accessing }
+SSTypeCollector >> orderedScalars [
+	^ orderedScalars
 ]
 
 { #category : #initialization }

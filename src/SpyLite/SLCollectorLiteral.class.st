@@ -8,14 +8,16 @@ Class {
 	#name : #SLCollectorLiteral,
 	#superclass : #RBProgramNodeVisitor,
 	#instVars : [
-		'literals'
+		'literals',
+		'orderedLiterals'
 	],
 	#category : #'SpyLite-Utility'
 }
 
 { #category : #initialization }
 SLCollectorLiteral >> initialize [ 
-	literals := Dictionary new
+	literals := OrderedDictionary new.
+	orderedLiterals := OrderedDictionary new
 ]
 
 { #category : #accessing }
@@ -28,11 +30,19 @@ SLCollectorLiteral >> nameOf: aClass [
 	^ aClass name
 ]
 
+{ #category : #accessing }
+SLCollectorLiteral >> orderedLiterals [
+	^ orderedLiterals 
+]
+
 { #category : #visiting }
 SLCollectorLiteral >> visitLiteralNode: aLiteralNode [
-  | literalValue aValue |
+  | literalValue aValue valueCollection nameOfClass |
   literalValue := aLiteralNode value.
-  aValue := literals at: (self nameOf: literalValue class) ifAbsentPut: [ Set new ].
+  nameOfClass := self nameOf: literalValue class.
+  aValue := literals at: nameOfClass ifAbsentPut: [ Set new ].
+  valueCollection := orderedLiterals at: nameOfClass ifAbsentPut: [ OrderedCollection new ].
+  (aValue includes: literalValue) ifFalse: [ valueCollection add: literalValue ].
   aValue add: literalValue.
-	literalValue isCollection ifTrue: [ [ aValue add: literalValue class new ] on: Error do: [  ] ]
+	literalValue isCollection ifTrue: [ [ aValue add: literalValue class new. valueCollection add: literalValue class new ] on: Error do: [  ] ]
 ]
