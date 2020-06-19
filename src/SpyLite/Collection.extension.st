@@ -14,5 +14,5 @@ Collection >> orderedUnion: aCollection [
 	
 	| set |
 	set := (OrderedSet withAll: self) addAll: aCollection; yourself.
-	^ self species withAll: set orderedList
+	^ self species withAll: set getOrderedList
 ]
