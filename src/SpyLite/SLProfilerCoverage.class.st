@@ -58,6 +58,31 @@ SLProfilerCoverage >> cleanBlocksOfMethods [
 ]
 
 { #category : #calculations }
+SLProfilerCoverage >> collectExecutedMethodsByClass [
+	^ self collectExecutedMethodsOfClasses: self allClassesAsDictionary keys
+]
+
+{ #category : #calculations }
+SLProfilerCoverage >> collectExecutedMethodsOf: aClassName [
+	| methods |
+	methods := (self classAt: aClassName) allMethods.
+	methods := methods select: [ :mth | mth blocks anySatisfy: #wasExecuted ].
+	^ Dictionary newFrom: (methods collect: [ :m | m asString -> m blocks deepCopy ]).
+	
+]
+
+{ #category : #calculations }
+SLProfilerCoverage >> collectExecutedMethodsOfClasses: classes [
+	| result |
+	result := Dictionary new.
+	(classes
+		collect:
+			[ :aClassName | self collectExecutedMethodsOf: aClassName ]) do: [ :d |result addAll: d ].
+	^ result
+	
+]
+
+{ #category : #calculations }
 SLProfilerCoverage >> methodCoverage [
 	| methods |
 	methods := self allMethods.

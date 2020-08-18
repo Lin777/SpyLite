@@ -4,7 +4,7 @@ Class {
 	#category : #'SpyLite-Scenario'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'helper methods' }
 SLCounter >> anAssignment [
 	| a |
 	a := 3.
@@ -16,7 +16,7 @@ SLCounter >> main [
 	^ self one
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'helper methods' }
 SLCounter >> methMix [
 	| aBoolean number |
 	aBoolean := 2 == 3.
@@ -27,7 +27,7 @@ SLCounter >> methMix [
 	^ number
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'helper methods' }
 SLCounter >> methWithArguments: aList [
 	| selectedNumbers |
 	selectedNumbers := OrderedCollection new.
@@ -42,7 +42,7 @@ SLCounter >> methWithArguments: aList [
 	^ selectedNumbers 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'helper methods' }
 SLCounter >> methWithComposeBlocks [
 	| list selectedNumbers |
 	selectedNumbers := OrderedCollection new.
@@ -55,11 +55,20 @@ SLCounter >> methWithComposeBlocks [
 	^ selectedNumbers 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'helper methods' }
 SLCounter >> methWithCondition [
 	^ 2 = 1
 		ifTrue: [ 3 ]
 		ifFalse: [ 4 ]
+]
+
+{ #category : #'helper methods' }
+SLCounter >> methWithDoubleCondition: aNumber [
+	aNumber odd
+		ifTrue: [ 
+			aNumber < 10 
+			ifTrue: [ true ] ]
+		ifFalse: [ false ]
 ]
 
 { #category : #'accessing structure variables' }

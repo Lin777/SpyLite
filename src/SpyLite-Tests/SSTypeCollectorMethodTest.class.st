@@ -35,7 +35,7 @@ SSTypeCollectorMethodTest >> testSelectLiteralsOf [
   typeCollectorMethod selectLiteralsOf: source.
   dictLiterals := typeCollectorMethod dictLiterals.
   self assertCollection: dictLiterals keys hasSameElements: (Array with: (self nameOf: SmallInteger) with: (self nameOf: ByteString)).
-  self assertCollection: (dictLiterals values flatCollect: [:val |  val ]) hasSameElements: #(2 5 'hello' 'world')
+  self assertCollection: (dictLiterals values flatCollect: [:val |  val ]) hasSameElements: #(2 5 'hello' '' 'world')
 ]
 
 { #category : #tests }

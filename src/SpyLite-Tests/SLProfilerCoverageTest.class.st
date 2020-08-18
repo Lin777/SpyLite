@@ -4,7 +4,7 @@ Class {
 	#category : #'SpyLite-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #asserting }
 SLProfilerCoverageTest >> asserMethodCoverage: profiler toNoExecutedMethods: aNumber [
 	self assert: profiler methodCoverage closeTo: ((100 * aNumber / profiler allMethods size) asFloat round: 2)
 ]
@@ -14,7 +14,7 @@ SLProfilerCoverageTest >> assert: aObject class: aClass [
 	self assert: aObject class name equals: aClass name 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #asserting }
 SLProfilerCoverageTest >> assertMethodCoverageOf: profiler on: symbol equals: number [
 	| dictMethodCoverage |
 	dictMethodCoverage := profiler methodCoverage1.
@@ -32,17 +32,17 @@ SLProfilerCoverageTest >> assertNoExecutedMethods: profiler equals: aNumber [
 SLProfilerCoverageTest >> assertNumExecutedMethodsOf: profiler on: symbol equals: number [
 	| dict |
 	dict := profiler calculateExecutedMethodsByClass.
-	self assert: (dict at: symbol) equals: number
+	self assert: (dict at: symbol) second equals: number
 ]
 
 { #category : #asserting }
 SLProfilerCoverageTest >> assertNumExecutedStatementsOf: profiler on: symbol equals: number [
 	| dict |
 	dict := profiler calculateExecutedStatementsByClass.
-	self assert: (dict at: symbol) equals: number
+	self assert: (dict at: symbol) second equals: number
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #asserting }
 SLProfilerCoverageTest >> assertStatementCoverageOf: profiler on: symbol equals: number [
 	| dictMethodCoverage |
 	dictMethodCoverage := profiler statementCoverage1.
