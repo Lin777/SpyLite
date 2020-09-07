@@ -8,7 +8,8 @@ Class {
 	#name : #SSTypeCollector,
 	#superclass : #SLProfiler,
 	#instVars : [
-		'scalars'
+		'scalars',
+		'nonScalars'
 	],
 	#category : #'SpyLite-TypeCollector'
 }
@@ -29,7 +30,12 @@ SSTypeCollector class >> typeNameOf: anObject [
 	^ anObject name
 ]
 
-{ #category : #initialization }
+{ #category : #actions }
+SSTypeCollector >> addNonScalar: anObject [
+  nonScalars add: anObject 
+]
+
+{ #category : #actions }
 SSTypeCollector >> addScalar: anObject [
   | value |
   value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ Set new ].
@@ -40,7 +46,8 @@ SSTypeCollector >> addScalar: anObject [
 { #category : #initialization }
 SSTypeCollector >> initialize [
 	super initialize.
-	scalars := Dictionary new
+	scalars := Dictionary new.
+	nonScalars := Set new.
 ]
 
 { #category : #initialization }
@@ -50,7 +57,12 @@ SSTypeCollector >> isScalar: anObject [
   ^false
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
+SSTypeCollector >> nonScalars [
+	^ nonScalars 
+]
+
+{ #category : #accessing }
 SSTypeCollector >> scalars [
 	^ scalars.
 ]

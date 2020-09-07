@@ -38,8 +38,17 @@ SSTypeCollectorMethod >> beforeRun: methodName with: listOfArguments in: aReceiv
 
 { #category : #hooks }
 SSTypeCollectorMethod >> checkIfArgIsScalar: arg [
-	(self profiler isScalar: arg)
+	| argType scalarShouldBeAdded |
+	argType := arg class name.
+	scalarShouldBeAdded := self profiler scalars at: argType ifPresent: [true] ifAbsent: [ nil ].
+	scalarShouldBeAdded 
+		ifNil: [ scalarShouldBeAdded := self profiler nonScalars like: argType.
+			scalarShouldBeAdded ifNotNil: [ scalarShouldBeAdded := false ] ].
+	scalarShouldBeAdded
+		ifNil: [ scalarShouldBeAdded := (self profiler isScalar: arg) and: [ arg isASimpleObject ] ].
+	scalarShouldBeAdded
 		ifTrue: [ self profiler addScalar: arg ]
+		ifFalse: [ self profiler addNonScalar: argType ]
 ]
 
 { #category : #accessing }
