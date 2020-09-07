@@ -49,7 +49,7 @@ Object >> objectDepth [
 	|result instVarsDepth |
 	result := 1.
 	instVarsDepth := ( 1 to: self class instSize ) collect: [ :i | (self instVarAt: i) objectDepth ].
-	instVarsDepth := instVarsDepth asOrderedCollection addAll: (( 1 to: self basicSize ) collect: [ :i | (self basicAt: i) objectDepth ]).
+	instVarsDepth := instVarsDepth asOrderedCollection addAll: (( 1 to: self basicSize ) collect: [ :i | (self basicAt: i) objectDepth ]); yourself.
 	instVarsDepth ifNotEmpty: [ result := result + instVarsDepth max ].
 	^ result
 ]
