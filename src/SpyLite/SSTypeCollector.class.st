@@ -39,14 +39,7 @@ SSTypeCollector >> addNonScalar: anObject [
 SSTypeCollector >> addScalar: anObject [
 	| value |
 	value := scalars at: (self nameOf: anObject class) ifAbsentPut: [ Set new ].
-	anObject isCollection 
-		ifTrue: [ 
-			[ 
-				value add: anObject class new.
-				anObject containsCleanedBlocks ifFalse: [ ^ self ].
-			] on: Error 
-			do: [  ] 
-		].
+	anObject isCollection ifTrue: [ value add: anObject class new ].
 	value add: anObject.
 	
 ]

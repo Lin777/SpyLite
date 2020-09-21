@@ -11,6 +11,27 @@ Object >> aSTypeCollectorClass [
 ]
 
 { #category : #'*SpyLite' }
+Object >> containUncleanedBlocks [ 
+	| semaphore process result timeOut |
+	result := self isUncleanedBlock.
+	semaphore := Semaphore new.
+	process := [ 
+	[ 
+	1 to: self class instSize do: 
+		[ :i | result := result or: [(self instVarAt: i) isUncleanedBlock ] ].
+	1 to: self basicSize do: 
+		[ :i | result := result or: [ (self basicAt: i) isUncleanedBlock ] ].
+	semaphore signal.
+	] on: Error
+	do: [ semaphore signal ]] fork.
+	timeOut := semaphore waitTimeoutMSecs: 1000.
+	timeOut ifTrue: [ 
+		process terminate.
+		self halt. ].
+	^ result
+]
+
+{ #category : #'*SpyLite' }
 Object >> depthIsLowerThan: aNumber [
 	| semaphore process result timeOut |
 	result := false.
@@ -42,6 +63,11 @@ Object >> isSpy [
 Object >> isSpyMethod [
 
 	^ false
+]
+
+{ #category : #'*SpyLite' }
+Object >> isUncleanedBlock [
+	^ (self isBlock and: [self isClean not]) 
 ]
 
 { #category : #'*SpyLite' }
