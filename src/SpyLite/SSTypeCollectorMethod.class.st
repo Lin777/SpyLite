@@ -47,7 +47,7 @@ SSTypeCollectorMethod >> checkIfArgIsScalar: arg [
 	scalarShouldBeAdded
 		ifNil: [ scalarShouldBeAdded := 
 			(self profiler isScalar: arg) and: [ arg isASimpleObject ] ].
-	(scalarShouldBeAdded and: [ arg containUncleanedBlocks ])
+	(scalarShouldBeAdded and: [ arg containUncleanedBlocks not ])
 		ifTrue: [ self profiler addScalar: arg ]
 		ifFalse: [ self profiler addNonScalar: argType ]
 ]
