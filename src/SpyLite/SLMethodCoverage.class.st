@@ -3,7 +3,9 @@ Class {
 	#superclass : #SLMethod,
 	#instVars : [
 		'blocks',
-		'probedMethod'
+		'probedMethod',
+		'cyclomaticNumber',
+		'coveredPaths'
 	],
 	#category : #'SpyLite-Coverage'
 }
@@ -20,9 +22,15 @@ SLMethodCoverage >> count: aNumber [
 		block executed]
 ]
 
+{ #category : #accessing }
+SLMethodCoverage >> cyclomaticNumber [
+	^ cyclomaticNumber
+]
+
 { #category : #'initialize-release' }
 SLMethodCoverage >> initialize [ 	
 	super initialize.
+	cyclomaticNumber := 1.
 	blocks := OrderedCollection new.
 ]
 
@@ -35,6 +43,7 @@ SLMethodCoverage >> installGhosts [
 	ifFalse: [[ 
 	rbMethodNode := RBParser
 		parseMethod: self originalMethod sourceCode.
+	cyclomaticNumber := (SVisitorForMetrics for: rbMethodNode) cyclomaticNumber.
 	blocks := SLInstrumentor new
 		visitNode: rbMethodNode;
 		blocks.
