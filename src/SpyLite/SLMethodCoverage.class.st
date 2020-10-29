@@ -10,9 +10,24 @@ Class {
 	#category : #'SpyLite-Coverage'
 }
 
+{ #category : #'initialize-release' }
+SLMethodCoverage >> addPath: aPath [
+	coveredPaths add: aPath
+]
+
 { #category : #accessing }
 SLMethodCoverage >> blocks [
 	^ blocks
+]
+
+{ #category : #reseting }
+SLMethodCoverage >> cleanBlocks [ 
+	self blocks do: [ :aBlock | aBlock noExecuted ]	
+]
+
+{ #category : #reseting }
+SLMethodCoverage >> cleanPaths [
+	coveredPaths := Set new.
 ]
 
 { #category : #enumerating }
@@ -23,8 +38,23 @@ SLMethodCoverage >> count: aNumber [
 ]
 
 { #category : #accessing }
+SLMethodCoverage >> coveredPaths [
+	^ coveredPaths
+]
+
+{ #category : #accessing }
 SLMethodCoverage >> cyclomaticNumber [
 	^ cyclomaticNumber
+]
+
+{ #category : #accessing }
+SLMethodCoverage >> executedBlocks [
+	^ coveredPaths flattened asSet
+]
+
+{ #category : #'initialize-release' }
+SLMethodCoverage >> executedPath [
+	^ (self blocks select: [ :e | e wasExecuted ] thenCollect: [ :e | e id ]) asArray
 ]
 
 { #category : #'initialize-release' }
@@ -32,6 +62,7 @@ SLMethodCoverage >> initialize [
 	super initialize.
 	cyclomaticNumber := 1.
 	blocks := OrderedCollection new.
+	coveredPaths := Set new.
 ]
 
 { #category : #installing }
@@ -40,10 +71,9 @@ SLMethodCoverage >> installGhosts [
 	"self selector = #pic ifTrue: [ self halt ]."
 	self originalMethod sourceCode size > 20000 
 	ifTrue: [ self uninstall ]
-	ifFalse: [[ 
-	rbMethodNode := RBParser
+	ifFalse: [ [ rbMethodNode := RBParser
 		parseMethod: self originalMethod sourceCode.
-	cyclomaticNumber := (SVisitorForMetrics for: rbMethodNode) cyclomaticNumber.
+	cyclomaticNumber := (SLVisitorForCyclomaticMetric for: rbMethodNode) cyclomaticNumber.
 	blocks := SLInstrumentor new
 		visitNode: rbMethodNode;
 		blocks.
@@ -51,7 +81,7 @@ SLMethodCoverage >> installGhosts [
 	newMethod := aClass compile: rbMethodNode printString notifying: nil.
 	aClass >> newMethod replaceLiterals: (Array with: (#metaObject -> self)) ]
 		on: Error
-		do: [ :e | self uninstall ]]
+		do: [ :e | self uninstall ] ]
 ]
 
 { #category : #'public - metrics' }
@@ -61,9 +91,16 @@ SLMethodCoverage >> numberOfAllStatements [
 
 { #category : #'public - metrics' }
 SLMethodCoverage >> numberOfExecutedStatements [
-	^ (self blocks select: #wasExecuted)
+	^ ("self blocks select: #wasExecuted"
+	self executedBlocks collect: [ :index | self blocks at: index ])
 		inject: 0
 		into: [ :sum :block | sum + block numberOfStatements ]
+]
+
+{ #category : #reseting }
+SLMethodCoverage >> resetValues [
+	self cleanBlocks.
+	self cleanPaths.
 ]
 
 { #category : #updating }

@@ -13,6 +13,11 @@ SLInstrumentor >> addBlock: aBlockNode [
 	blocks add: (self buildSBBlock: aBlockNode)
 ]
 
+{ #category : #visiting }
+SLInstrumentor >> addPathNode: aMethodNode [
+	aMethodNode body addNodeLast: (self buildPathNode)
+]
+
 { #category : #accessing }
 SLInstrumentor >> blocks [ 	
 	^ blocks
@@ -21,6 +26,11 @@ SLInstrumentor >> blocks [
 { #category : #visiting }
 SLInstrumentor >> buildGhostNode: anInteger [
 	^ RBParser parseExpression: '#metaObject count: ' , anInteger asString , '.nil.'.
+]
+
+{ #category : #visiting }
+SLInstrumentor >> buildPathNode [
+	^ RBParser parseExpression: '#metaObject addPath: #metaObject executedPath; cleanBlocks. nil.'.
 ]
 
 { #category : #visiting }
@@ -59,5 +69,6 @@ SLInstrumentor >> visitBlockNode: aBlockNode [
 { #category : #visiting }
 SLInstrumentor >> visitMethodNode: aMethodNode [
 	self instrumentBlock: aMethodNode.
-	super visitMethodNode: aMethodNode
+	super visitMethodNode: aMethodNode.
+	self addPathNode: aMethodNode.
 ]

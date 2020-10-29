@@ -372,7 +372,6 @@ SLMethod >> returnValue: value [
 { #category : #hooks }
 SLMethod >> run: methodName with: listOfArguments in: receiver [
 	| v |
-
 	self beforeRun: methodName with: listOfArguments in: receiver.
 	self classSpy ifNotNil: [
 		classSpy beforeEachExecution: methodName On: receiver with: listOfArguments ].

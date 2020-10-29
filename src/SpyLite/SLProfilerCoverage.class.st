@@ -18,6 +18,36 @@ SLProfilerCoverage >> beforeProfiling [
 ]
 
 { #category : #calculations }
+SLProfilerCoverage >> branchCoverage1 [
+	^ (self calculateExecutedBranchsByClass associations
+		collect: [ :assoc | 
+			| dataExecStmts |
+			dataExecStmts := assoc value. "it contains: number of statements of class methods, number of executed statements"
+			dataExecStmts first > 0 ifFalse: [ assoc key -> 0 ] ifTrue: [ 
+			assoc key
+				->
+					(((100 * dataExecStmts second / dataExecStmts first)
+						asFloat) round: 3) ]]) asDictionary
+]
+
+{ #category : #calculations }
+SLProfilerCoverage >> branchCoverageFor: aTargetClass [
+	[| executedStatements |
+	executedStatements := self calculateExecutedPathsOf: aTargetClass.
+	^ ((executedStatements second / executedStatements first) * 100 asFloat) round: 3]
+ on: Error
+do: [ ^ 0 ]
+]
+
+{ #category : #calculations }
+SLProfilerCoverage >> calculateExecutedBranchsByClass [
+	^ (self allClassesAsDictionary keys
+		collect:
+			[ :aClassName | aClassName -> (self calculateExecutedPathsOf: aClassName) ] thenSelect: [:assoc | assoc value second > 0])
+		asDictionary
+]
+
+{ #category : #calculations }
 SLProfilerCoverage >> calculateExecutedMethodsByClass [
 	^ (self allClassesAsDictionary keys
 		collect: [ :aClassName | aClassName -> (self calculateExecutedMethodsOf: aClassName) ])
@@ -29,6 +59,17 @@ SLProfilerCoverage >> calculateExecutedMethodsOf: aSymbol [
 	| methods |
 	methods := (self classAt: aSymbol) allMethods.
 	^ Array with: methods size with: (self selectExecutedMethods: methods) size
+]
+
+{ #category : #calculations }
+SLProfilerCoverage >> calculateExecutedPathsOf: aSymbol [
+	| methods numStmts |
+	methods := (self classAt: aSymbol) allMethods.
+	numStmts := methods ifEmpty: [ 0 ] ifNotEmpty: [ (methods collect: [ :m | m cyclomaticNumber ] ) sum ].
+	^ Array with: numStmts with: 
+	   (methods
+		inject: 0
+		into: [ :sum :method | sum + method coveredPaths size ])
 ]
 
 { #category : #calculations }
@@ -53,7 +94,7 @@ SLProfilerCoverage >> calculateExecutedStatementsOf: aSymbol [
 { #category : #cleaning }
 SLProfilerCoverage >> cleanBlocksOfMethods [
 	self allMethods do: [ :aMethod | 
-		aMethod blocks do: [ :aBlock | aBlock noExecuted ]	
+		aMethod "cleanBlocks"resetValues
 	]
 ]
 
@@ -200,6 +241,5 @@ SLProfilerCoverage >> updateClass: aClassCoverage [
 				aClassCoverage metaclassSpy localMethods do: [ :meth | meth classSpy: val metaclassSpy ] .
 				val methods: aClassCoverage localMethods.
 				val metaclassSpy methods: aClassCoverage metaclassSpy localMethods.
-				pack classes at: aClassCoverage className put: val ]
-		]
+				pack classes at: aClassCoverage className put: val ] ]
 ]

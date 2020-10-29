@@ -700,7 +700,7 @@ SLProfiler class >> with15arg: v1 arg: v2 arg: v3 arg: v4 arg: v5 arg: v6 arg: v
 ]
 
 { #category : #'private - method template' }
-SLProfiler class >> with1arg: v1 [ 
+SLProfiler class >> with1arg: v1 [
 ^ #metaObject run: #selector with: {v1} in: self  
 ]
 
@@ -809,7 +809,7 @@ SLProfiler >> allMethods [
 	allMethodsCache := OrderedCollection new.
 	self packages do: [:p | 
 		allMethodsCache addAll: p allMethods ].
-	^ allMethodsCache 
+	^ allMethodsCache
 ]
 
 { #category : #'accessing - read only' }
