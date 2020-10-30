@@ -172,7 +172,7 @@ SLProfilerCoverage >> numberOfExecutedStatements [
 { #category : #filtering }
 SLProfilerCoverage >> selectExecutedMethods: aList [
 	^ (aList select: [ :aMethod | aMethod blocks isNotEmpty ])
-		select: [ :aMethod | aMethod blocks first wasExecuted ]
+		select: [ :aMethod | aMethod "blocks first wasExecuted"coveredPaths isNotEmpty ]
 ]
 
 { #category : #calculations }
