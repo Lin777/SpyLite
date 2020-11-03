@@ -3,7 +3,8 @@ Class {
 	#superclass : #RBProgramNodeVisitor,
 	#instVars : [
 		'blocks',
-		'currentId'
+		'currentId',
+		'currentReturn'
 	],
 	#category : #'SpyLite-Utility'
 }
@@ -46,6 +47,7 @@ SLInstrumentor >> buildSBBlock: aBlockNode [
 SLInstrumentor >> initialize [
 	super initialize.
 	blocks := OrderedCollection new.
+	currentReturn := 0.
 ]
 
 { #category : #visiting }
@@ -61,6 +63,12 @@ SLInstrumentor >> nextId [
 ]
 
 { #category : #visiting }
+SLInstrumentor >> nextReturn [
+	currentReturn := currentReturn + 1.
+	^ currentReturn.
+]
+
+{ #category : #visiting }
 SLInstrumentor >> visitBlockNode: aBlockNode [
 	self instrumentBlock: aBlockNode.
 	super visitBlockNode: aBlockNode
@@ -70,5 +78,19 @@ SLInstrumentor >> visitBlockNode: aBlockNode [
 SLInstrumentor >> visitMethodNode: aMethodNode [
 	self instrumentBlock: aMethodNode.
 	super visitMethodNode: aMethodNode.
-	self addPathNode: aMethodNode.
+	aMethodNode body lastIsReturn ifFalse: [ self addPathNode: aMethodNode ].
+]
+
+{ #category : #visiting }
+SLInstrumentor >> visitReturnNode: aReturnNode [
+	(aReturnNode value isVariable or: [ aReturnNode value isLiteralNode ]) 
+		ifFalse: [ |temp|
+			temp := '_returnValue', self nextReturn asString.
+			aReturnNode parent addTemporaryNamed: temp.
+			aReturnNode parent addNodeLast: (RBAssignmentNode 
+				variable:  (RBVariableNode named: temp) 
+				value: aReturnNode value).
+			aReturnNode value: (RBVariableNode named: temp)  ].
+	aReturnNode parent addNodeLast: (self buildPathNode).
+	super visitReturnNode: aReturnNode.
 ]
