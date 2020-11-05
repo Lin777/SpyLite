@@ -28,7 +28,7 @@ SLVisitorForCyclomaticMetric >> computeCyclomaticNumber: sel [
 
 	| branches loops |
 	branches := #(#ifTrue: #ifFalse: #ifTrue:ifFalse: #ifFalse:ifTrue: #ifNil: #ifNil:ifNotNil: #ifNotNil:ifNil: #ifNotNil: #ifEmpty:ifNotEmpty: #ifNotEmpty:ifEmpty: #ifEmpty: #ifNotEmpty:  #at:ifAbsent: #at:ifAbsentPut: #detect:ifNone: #on:do: #and: #or: #xor:).
-	loops := #(#whileTrue: #whileTrue #whileFalse #whileFalse: #timesRepeat: #to:do: #do:separatedBy: #do: #collect: #select: #reject: #inject:into: #detect: #detect:ifNone: #anySatisfy: #allSatisfy: #piecesCutWhere:).	"-- please not that #detect:ifNone: is listed twice because it is both loop and branch!!! -- akuhn"
+	loops := #(#whileTrue: #whileTrue #repeat #whileFalse #whileFalse: #timesRepeat: #to:do: #do:separatedBy: #do: #collect: #select: #reject: #inject:into: #detect: #detect:ifNone: #anySatisfy: #allSatisfy: #piecesCutWhere: #noneSatisfy:).	"-- please not that #detect:ifNone: is listed twice because it is both loop and branch!!! -- akuhn"
 	(branches includes: sel) ifTrue: [ cyclomaticNumber := cyclomaticNumber + 1].
 	(loops includes: sel) ifTrue: [ cyclomaticNumber := cyclomaticNumber + 1 ].
 	"-- HERE STARTS THE OLD ERRORFUL IMPL --"
