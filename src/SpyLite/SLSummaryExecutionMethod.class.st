@@ -10,7 +10,10 @@ Class {
 		'isClassSide',
 		'hasProfiler',
 		'returnType',
-		'argsTypes'
+		'argsTypes',
+		'summaryAllBlocks',
+		'summaryBranches',
+		'summaryBlocks'
 	],
 	#category : #'SpyLite-Utility'
 }
@@ -21,11 +24,15 @@ SLSummaryExecutionMethod class >> on: slMethod [
 		executorClass: slMethod classSpy className;
 		selector: slMethod selector;
 		code: ([slMethod blocks first code] on: SubscriptOutOfBounds do: ['']);
-		executed: ([slMethod blocks first wasExecuted] on: SubscriptOutOfBounds do: [ false ]);
+		executed: ([slMethod coveredPaths isNotEmpty ] on: SubscriptOutOfBounds do: [ false ]);
 		isClassSide: slMethod isClassSide;
 		summaryStatements: (slMethod blocks allButFirst collect: [:block | 
-			SLSummaryStatement with: block code and: block wasExecuted 	
-		])
+			SLSummaryStatement on: block wasExecuted: (slMethod executedBlocks includes: block id) 	
+		]);
+	summaryBlocks: slMethod executedBlocks;
+	summaryAllBlocks: ( Dictionary newFromKeys: (slMethod blocks collect: #id) 
+		andValues: (slMethod blocks collect: #numberOfStatements) );
+		summaryBranches: slMethod coveredPaths
 ]
 
 { #category : #comparing }
@@ -60,6 +67,29 @@ SLSummaryExecutionMethod >> code [
 { #category : #accessing }
 SLSummaryExecutionMethod >> code: anObject [
 	code := anObject
+]
+
+{ #category : #counting }
+SLSummaryExecutionMethod >> countBranchesOf: anArray [
+	^ anArray size
+]
+
+{ #category : #counting }
+SLSummaryExecutionMethod >> countStatementsOf: anArray [
+self halt.
+	^ ((anArray collect: [ :e | summaryAllBlocks at: e ifAbsent: [ 0 ] ]) sum)
+]
+
+{ #category : #diff }
+SLSummaryExecutionMethod >> difference: slSummary on: aSymbol [
+	| intersection news nocov myCovered otherCovered |
+	myCovered := (self perform: aSymbol).
+	otherCovered := (slSummary perform: aSymbol).
+	intersection := myCovered intersection: otherCovered.
+	news := otherCovered copyWithoutAll: intersection.
+	nocov := myCovered copyWithoutAll: intersection.
+
+	^ Array with: news with: nocov
 ]
 
 { #category : #accessing }
@@ -106,7 +136,8 @@ SLSummaryExecutionMethod >> hash [
 SLSummaryExecutionMethod >> initialize [ 	
 	code := ''.
 	executed := false.
-	summaryStatements := OrderedCollection new
+	summaryStatements := OrderedCollection new.
+	summaryBranches := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -144,6 +175,16 @@ SLSummaryExecutionMethod >> selector: anObject [
 	selector := anObject
 ]
 
+{ #category : #accessing }
+SLSummaryExecutionMethod >> summaryAllBlocks [
+	^ summaryAllBlocks
+]
+
+{ #category : #accessing }
+SLSummaryExecutionMethod >> summaryAllBlocks: anObject [
+	summaryAllBlocks := anObject
+]
+
 { #category : #export }
 SLSummaryExecutionMethod >> summaryAsColl [
 	^ OrderedCollection new 
@@ -161,6 +202,26 @@ SLSummaryExecutionMethod >> summaryAsColl [
 			add: (self executedBlocks collect: #code) asArray;
 			add: (self unexecutedBlocks collect: #code) asArray;
 			yourself 
+]
+
+{ #category : #accessing }
+SLSummaryExecutionMethod >> summaryBlocks [
+	^ summaryBlocks
+]
+
+{ #category : #accessing }
+SLSummaryExecutionMethod >> summaryBlocks: anObject [
+	summaryBlocks := anObject
+]
+
+{ #category : #accessing }
+SLSummaryExecutionMethod >> summaryBranches [
+	^ summaryBranches
+]
+
+{ #category : #accessing }
+SLSummaryExecutionMethod >> summaryBranches: anObject [
+	summaryBranches := anObject
 ]
 
 { #category : #accessing }

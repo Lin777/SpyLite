@@ -2,11 +2,20 @@ Class {
 	#name : #SLSummaryStatement,
 	#superclass : #Object,
 	#instVars : [
+		'id',
 		'code',
 		'executed'
 	],
 	#category : #'SpyLite-Utility'
 }
+
+{ #category : #'as yet unclassified' }
+SLSummaryStatement class >> on: aBlock wasExecuted: aBoolean [
+	^ self new 
+		id: aBlock id;
+		code: aBlock code;
+		executed: aBoolean
+]
 
 { #category : #'as yet unclassified' }
 SLSummaryStatement class >> with: string and: boolean [ 
@@ -44,6 +53,16 @@ SLSummaryStatement >> executed: anObject [
 { #category : #comparing }
 SLSummaryStatement >> hash [ 
 	^ executed hash
+]
+
+{ #category : #accessing }
+SLSummaryStatement >> id [
+	^ id
+]
+
+{ #category : #accessing }
+SLSummaryStatement >> id: anObject [
+	id := anObject
 ]
 
 { #category : #initialization }

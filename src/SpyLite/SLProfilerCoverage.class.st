@@ -175,6 +175,11 @@ SLProfilerCoverage >> selectExecutedMethods: aList [
 		select: [ :aMethod | aMethod "blocks first wasExecuted"coveredPaths isNotEmpty ]
 ]
 
+{ #category : #summaries }
+SLProfilerCoverage >> simpleSummaryMethodsOf: aTargetClass [
+	^ (self classAt: aTargetClass) allMethods collect: [ :method | SLSummaryExecutionMethod on: method.]
+]
+
 { #category : #calculations }
 SLProfilerCoverage >> statementCoverage [
 	self numberOfAllStatements == 0
@@ -219,7 +224,8 @@ SLProfilerCoverage >> summaryMethodsOf: aTargetClass [
 		summary := SLSummaryExecutionMethod on: method.
 		methodTypeInfo := (method isClassSide ifTrue: [ aSTypeClassInfo classMethodTypes ]
 		ifFalse: [ aSTypeClassInfo methodTypes ]) at: method selector ifAbsent: [nil].
-		methodTypeInfo ifNotNil: [ summary updateTypeInfoWith: methodTypeInfo ] ]
+		methodTypeInfo ifNotNil: [ summary updateTypeInfoWith: methodTypeInfo ].
+		summary ]
 ]
 
 { #category : #accessing }
