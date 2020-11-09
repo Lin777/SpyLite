@@ -76,8 +76,9 @@ SLSummaryExecutionMethod >> countBranchesOf: anArray [
 
 { #category : #counting }
 SLSummaryExecutionMethod >> countStatementsOf: anArray [
-self halt.
-	^ ((anArray collect: [ :e | summaryAllBlocks at: e ifAbsent: [ 0 ] ]) sum)
+	| statements |
+	statements := anArray asArray collect: [ :e | summaryAllBlocks at: e ifAbsent: [ 0 ] ].
+	^ statements ifEmpty: [ 0 ] ifNotEmpty: [ statements sum ]
 ]
 
 { #category : #diff }
